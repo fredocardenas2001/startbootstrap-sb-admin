@@ -645,7 +645,7 @@ setupRestoreSelections() {
 
 async loadConfig() {
   try {
-    const res = await fetch('/assets/config/directory-config.json');
+    const res = await fetch('assets/config/directory-config.json');
     if (!res.ok) throw new Error(`Failed to load config: ${res.status}`);
     this.config = await res.json();
   } catch (err) {

@@ -128,22 +128,20 @@
                             <div id="debugData" style="display: none"></div>
                             <!-- JSON display -->
                         </div>
-                        <!-- Rename Chat Modal -->
-                        <div id="renameChatModal" class="modal">
+                        <div class="modal" id="renameChatModal">
                             <div class="modal-content">
-                                <span class="close" onclick="closeRenameModal()">&times;</span>
+                                <span class="close" onclick="closeRenameModal()">×</span>
                                 <h3>Rename Chat</h3>
-                                <input type="text" id="newChatName" placeholder="Enter new chat name" />
+                                <input id="newChatName" type="text" placeholder="Enter new chat name" />
                                 <p>
                                     <button onclick="submitRenameChat()">Rename</button>
                                     <button onclick="closeRenameModal()">Cancel</button>
                                 </p>
                             </div>
                         </div>
-                        <!-- Delete Chat Modal -->
-                        <div id="deleteChatModal" class="modal">
+                        <div class="modal" id="deleteChatModal">
                             <div class="modal-content">
-                                <span class="close" onclick="closeDeleteModal()">&times;</span>
+                                <span class="close" onclick="closeDeleteModal()">×</span>
                                 <h3>Delete Chat</h3>
                                 <p>
                                     We suggest saving your chat before you delete it since this is an
@@ -151,13 +149,12 @@
                                     . Would you like to proceed?
                                 </p>
                                 <button onclick="confirmDeleteChat()">Delete</button>
-                                <button onclick="closeDeleteModal()">Cancel</button>
                             </div>
                         </div>
                         <!-- help modal -->
-                        <div id="helpModal" class="modal">
+                        <div class="modal" id="helpModal">
                             <div class="modal-content">
-                                <span class="close">&times;</span>
+                                <span class="close">×</span>
                                 <h2>Chat Context</h2>
                                 <p>Enabling Chat Context allows you to limit queries to a specific subset of project documents.</p>
                                 <h3>How to Use Chat Context</h3>
@@ -171,7 +168,7 @@
                                 </p>
                                 <p>
                                     <strong>Update:</strong>
-                                    Takes you to the Direcotry page to set the search Context.
+                                    Takes you to the Directory page to set the search Context.
                                 </p>
                                 <p>
                                     <strong>Disable:</strong>
@@ -184,10 +181,9 @@
                                 </p>
                             </div>
                         </div>
-                        <!-- Service Packages placeholder -->
-                        <div id="servicePackageModal" class="modal">
+                        <div class="modal" id="servicePackageModal">
                             <div class="modal-content">
-                                <span class="close">&times;</span>
+                                <span class="close">×</span>
                                 <h3>Enabled Packages</h3>
                                 <table class="service-table">
                                     <tbody>

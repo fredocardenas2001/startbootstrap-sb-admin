@@ -201,15 +201,20 @@ modal.classList.add("show");    // ✅ uses your CSS to show modal
     return;
   }
 
-  const summary = docMeta?.summary || "No summary available";
+  const summary = docMeta?.r2r_summary || docMeta?.summary || "No summary available";
   const platform = window.sourcePlatform?.toLowerCase();
 
-  const onedriveName = docMeta?.metadata?.onedrive_name || docMeta?.title || "Document Preview";
+	const doc_title =
+	  docMeta?.metadata?.onedrive_name ||
+	  docMeta?.title ||
+	  docMeta?.name ||   // ✅ use this for filename
+	  "Document Preview";
+
 
   let uri = null;
   if (platform === "onedrive") {
     const sharepointUrl = getSharePointDirectLinkFromIndex(documentId);
-    uri = getOfficeUriFromSharePointLink(sharepointUrl, onedriveName);
+    uri = getOfficeUriFromSharePointLink(sharepointUrl, doc_title);
   } else if (platform === "dropbox") {
     uri = docMeta?.web_url || null;
   } else {
@@ -217,14 +222,17 @@ modal.classList.add("show");    // ✅ uses your CSS to show modal
     return;
   }
 
-  console.log("🔗 Document link:", uri);
+const citationText = window.citationData?.[documentId] || "No citation text available.";
+
+console.log("🔎 Updating modal:", { doc_title, uri, summary, citationText });
+//console.log("🗂️ docMeta dump:", JSON.stringify(docMeta, null, 2));
+
 
   const titleEl = document.getElementById("docModalTitle");
-  titleEl.innerHTML = `<a href="${uri}" target="_blank" title="${summary}">${onedriveName}</a>`;
+  titleEl.innerHTML = `<a href="${uri}" target="_blank" title="${summary}">${doc_title}</a>`;
 
-  const citationText = window.citationData?.[documentId] || "No citation text available.";
   const renderedHtml = convertMarkdownToHtml(citationText);
-  console.log("📄 Rendered citationText:", renderedHtml);
+  //console.log("📄 Rendered citationText:", renderedHtml);
   document.getElementById("docModalContent").innerHTML = renderedHtml;
 }
 window.openCitationModal = openCitationModal;
@@ -374,64 +382,79 @@ function removeLoadingGif(element) {
     }
 }
 
+
+
+
 function injectDocPreviewModal() {
   console.log("🛠️ injectDocPreviewModal called");
 
-  const modalHtml = `
-    <div id="docPreviewModal" class="doc-preview-modal">
+const modalHtml = `
+  <div id="docPreviewModal" class="doc-preview-modal" style="display:none;">
+    <div class="modal-backdrop">
       <div class="modal-content">
-        <span class="close" onclick="closeDocPreviewModal()">&times;</span>
-        <h3 id="docModalTitle">Document Preview</h3>
+        <div class="modal-header">
+          <h3 id="docModalTitle">Document Preview</h3>
+          <span class="close">&times;</span>
+        </div>
         <hr>
-        <h4>Citation Details</h4>
+        <h4 id="docModalSubheading">Citation Details</h4>
         <div id="docModalContent"></div>
       </div>
     </div>
-  `;
-  document.body.insertAdjacentHTML("beforeend", modalHtml);
+  </div>
+`;
+
+
+  const chatRoot = document.querySelector("#chat-entry");
+  if (chatRoot) {
+    chatRoot.insertAdjacentHTML("beforeend", modalHtml);
+  } else {
+    console.warn("⚠️ #chat-entry not found, falling back to <body>");
+    document.body.insertAdjacentHTML("beforeend", modalHtml);
+  }
 
   const modal = document.getElementById("docPreviewModal");
+  const backdrop = modal.querySelector(".modal-backdrop");
   const closeBtn = modal.querySelector(".close");
-  const content = modal.querySelector(".modal-content");
 
+  // ✅ Click the X
   if (closeBtn) {
     closeBtn.addEventListener("click", closeDocPreviewModal);
   }
 
-  // Click-away logic
-document.addEventListener('click', (event) => {
-  const modal = document.getElementById("docPreviewModal");
-  const content = modal?.querySelector(".modal-content");
-
-  if (!modal || !content) return;
-
-  // Modal is open, and click is outside the content box
-  if (
-    modal.classList.contains("show") &&
-    !content.contains(event.target)
-  ) {
-    closeDocPreviewModal();
+  // ✅ Click backdrop (but not content)
+  if (backdrop) {
+    backdrop.addEventListener("click", (e) => {
+      if (e.target.classList.contains("modal-backdrop")) {
+        closeDocPreviewModal();
+      }
+    });
   }
-});
 
-
-  // Escape key
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
+  // ✅ Escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
       closeDocPreviewModal();
     }
   });
-
-  // Safe global hook
-  window.closeDocPreviewModal = closeDocPreviewModal;
 }
 
+function openDocPreviewModal() {
+  const modal = document.getElementById("docPreviewModal");
+  if (modal) {
+    modal.classList.add("show");
+    modal.style.removeProperty("display");
+  }
+}
 
 function closeDocPreviewModal() {
-    const modal = document.getElementById("docPreviewModal");
-    if (modal) modal.style.display = "none";
+  const modal = document.getElementById("docPreviewModal");
+  if (modal) {
+    modal.classList.remove("show");
+    modal.style.display = "none";
+  }
 }
-window.closeDocPreviewModal = closeDocPreviewModal;
+
 
 function loadSessions() {
     const config = window.config || {};
@@ -785,9 +808,6 @@ function wireExportButtonsOnce() {
     p.dataset.bound = '1';
   }
 }
-
-
-
 
 function makeSection(title, innerHTML) {
   const id = "cs_" + Math.random().toString(36).slice(2, 8);
@@ -1187,7 +1207,7 @@ async function replaceCitationsWithIcons(text, citations) {
 		}
         window.citationData[documentId] = p.summary || "No description available.";
         const title = docMeta.name || "Unknown File";
-		console.log("[citation debug] documentId:", documentId, "p:", p);
+		//console.log("[citation debug] documentId:", documentId, "p:", p);
         return `<span class="citation-icon citation-local" onclick="openCitationModal('${esc(documentId)}')" title="${esc(title)}&#10;Click for more details.">🗏</span>`;
       });
 
@@ -2065,23 +2085,37 @@ function ensureWebModal() {
   let modal = document.getElementById("webPreviewModal");
   if (modal) return modal;
 
-  // Build a modal structurally similar to your doc modal
   modal = document.createElement("div");
   modal.id = "webPreviewModal";
-  modal.className = "doc-preview-modal"; // reuse your modal styles
+  modal.className = "doc-preview-modal";
   modal.style.display = "none";
   modal.innerHTML = `
-    <div class="modal-content">
-      <span class="close" onclick="closeWebPreviewModal()">&times;</span>
-      <h4 id="webModalTitle">Web Citation</h4>
-      <hr>
-      <h4>Citation Details</h4>
-      <pre id="webModalContent"></pre>
+    <div class="modal-backdrop">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 id="webModalTitle">Web Citation</h4>
+          <span class="close" onclick="closeWebPreviewModal()">&times;</span>
+        </div>
+        <hr>
+        <div id="webModalContent"></div>
+      </div>
     </div>
   `;
   document.body.appendChild(modal);
+
+  // Attach backdrop click-to-close
+  const backdrop = modal.querySelector(".modal-backdrop");
+  if (backdrop) {
+    backdrop.addEventListener("click", (e) => {
+      if (e.target.classList.contains("modal-backdrop")) {
+        closeWebPreviewModal();
+      }
+    });
+  }
+
   return modal;
 }
+
 
 function openWebCitationModal(elOrLink, title, snippet) {
   let link;

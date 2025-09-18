@@ -1,0 +1,689 @@
+.button-30 {
+  align-items: center;
+  appearance: none;
+  background-color: #FCFCFD;
+  border-radius: 6px;
+  border-width: 0;
+  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,rgba(45, 35, 66, 0.3) 0 7px 13px -3px,#D6D6E7 0 -3px 0 inset;
+  box-sizing: border-box;
+  color: #36395A;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: "JetBrains Mono", monospace;
+  height: 32px; /* Adjusted height for smaller buttons */
+  justify-content: center;
+  line-height: 1;
+  list-style: none;
+  overflow: hidden;
+  padding: 2px 2px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transition: box-shadow .0s, transform .0s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  will-change: box-shadow, transform;
+  font-size: 10px;
+}
+
+.button-30:focus {
+  box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+}
+
+.button-30:hover {
+  box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+  transform: translateY(-2px);
+}
+
+.button-30:active {
+  box-shadow: #D6D6E7 0 3px 7px inset;
+  transform: translateY(2px);
+}
+body {
+	font-family: Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	background-color: #f9f9f9;
+}
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+.navbar a {
+	text-decoration: none;
+	color: white;
+	padding: 10px;
+	display: flex;
+	align-items: center;
+}
+/* 🔹 Navbar Styling */
+.navbar {
+    background: #0078d4; /* Same color as taskpane.html */
+    padding: 8px;
+    text-align: center;
+    font-size: 14px;
+    color: white;
+    font-weight: bold;
+	width: 95%;
+	border-radius: 15px;
+	display: flex;
+	gap: 15px;
+
+}
+.container {
+	width: 95%;
+	max-width: 1200px;
+	margin: 20px auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	align-items: stretch; /* 👈 more appropriate than ceer for full-width child */
+    height: 100vh; /* 👈 fill the taskpane vertical space */
+}
+h2 {
+	text-align: center;
+	color: #333;
+	margin-bottom: 10px;
+}
+.collapsible {
+	background-color: #0078d4;
+	color: white;
+	cursor: pointer;
+	padding: 8px;
+	width: 100%;
+	border: none;
+	text-align: left;
+	outline: none;
+	font-size: 14px;
+	border-radius: 15px;
+}
+.session-item.active {
+	background-color: #0078d4 !important;
+	color: white !important;
+	font-weight: bold;
+}
+.session-list-container {
+	width: 100%;
+	margin-bottom: 10px;
+    margin-top: 10px;
+}
+.session-list {
+	width: 100%;
+	max-height: 150px;
+	overflow-y: auto;
+	background: white;
+	padding: 10px;
+	border-radius: 10px;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+.session-item {
+	padding: 4px;
+	border-bottom: 1px solid #ddd;
+	cursor: pointer;
+	font-size:12px;
+}
+.session-item:hover {
+	background-color: #f1f1f1;
+}
+.chat-container {
+	width: 100%;
+	background: white;
+	border-radius: 10px;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+	display: flex;
+	flex-direction: column;
+	height: 80vh;
+    margin: 0 auto;
+}
+.chat-box {
+	flex-grow: 1;
+	overflow-y: auto;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 10px;
+	background: #f4f4f4;
+	border-radius: 5px;
+	width: 100%;
+	word-wrap: break-word; /* Ensures words wrap */
+	white-space: pre-wrap; /* Maintains line breaks but allows wrapping */
+}
+.chat-box pre {
+	white-space: pre-wrap; /* Ensures text inside <pre> wraps */
+	word-wrap: break-word; /* Allows long words to wrap */
+	overflow-x: auto; /* Adds horizontal scrolling if needed */
+}
+.new-chat-container {
+	display: flex;
+	gap: 10px;
+	width: 100%;
+	margin-top: 10px;
+}
+/* Align ellipsis menu to the right */
+.session-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+}
+
+input {
+	flex-grow: 1;
+	padding: 8px;
+}
+button {
+	padding: 8px 15px;
+	background-color: #0078d4;
+	color: white;
+	border: none;
+	border-radius: 15px;
+	cursor: pointer;
+	font-size:14px;
+}
+.message-input-container {
+	display: flex;
+	gap: 10px;
+	width: 100%;
+	margin-top: 10px;
+}
+
+.message-input-container input {
+	flex-grow: 1;
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}
+
+.message-input-container button {
+	padding: 8px 15px;
+	background-color: #0078d4;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+.collapsible-container {
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.new-session-btn {
+	background-color: #009688; /* Different color to distinguish */
+	color: white;
+	border: none;
+	padding: 10px;
+	cursor: pointer;
+	border-radius: 5px;
+}
+
+.new-session-btn:hover {
+	background-color: #00796B;
+}
+b {
+    font-weight: bold;
+}
+/* 🔻 Match Validate Button Style with Send Button */
+#validate {
+    padding: 8px 15px;
+    background-color: #0078d4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    display: block;
+    margin: 10px auto; /* Centers the button */
+    width: 150px; /* Adjust width if needed */
+    margin-top: 10px; /* Adjust as needed */
+}
+
+}
+
+#validate:hover {
+    background-color: #005a9e;
+}
+
+/* Center and shrink the horizontal line */
+.divider-line {
+    width: 85%;
+    margin: 15px auto;
+    border: 2px solid #0078d4;
+}
+
+/* 🔻 Instructional Text Above Validate Button */
+.validate-instruction {
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 10px;
+}
+#app-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers content horizontally */
+    width: 100%;
+}
+.validate-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+/* Match session list width to chat window */
+
+/* Styling for ellipsis button */
+/* Default Ellipsis Button */
+.ellipsis-menu {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 5px;
+    color: #0078d4; /* Default Blue */
+}
+
+/* Change Ellipsis to White on Active Session */
+.session-item.active .ellipsis-menu {
+    color: white; /* Turns white on active chat */
+}
+
+/* Style the menu dropdown */
+.menu-dropdown {
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 30px;
+    background: white;
+    border: 1px solid #0078d4; /* 🔵 Blue border */
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    width: 120px;
+}
+
+/* Style menu items */
+.menu-dropdown button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: white;
+    text-align: left;
+    cursor: pointer;
+    color: #0078d4; /* 🔵 Blue text */
+    font-weight: bold;
+}
+
+/* Hover effect for menu items */
+.menu-dropdown button:hover {
+    background: #e6f2ff; /* Light blue background */
+}
+
+/* Show menu when active */
+.session-item:hover .menu-dropdown {
+    display: block;
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 250px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.close {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+}
+.notification {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: white;
+    font-size: 14px;
+    text-align: center;
+    z-index: 1000;
+    opacity: 0.9;
+}
+
+.notification.success {
+    background-color: #28a745;
+}
+
+.notification.error {
+    background-color: #dc3545;
+}
+
+/* 🔹 Validation Box (Styled Like Chat Box) */
+.validate-box {
+    width: 100%;
+    height: 600px;
+    background: #f4f4f4;
+    border-radius: 10px;
+    padding: 15px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    margin: 20px auto;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    white-space: pre-wrap; /* Preserve line breaks & wrap text */
+    word-wrap: break-word;  /* Ensures long words do not overflow */
+    font-family: monospace; /* Keeps log formatting consistent */
+    border: 1px solid #ccc; /* Optional: Adds a light border */
+    padding: 10px;          /* Adds some spacing */
+    overflow-wrap: break-word; /* Helps in modern browsers */
+}
+
+/* 🔹 Center the Validate Button */
+#validateAction {
+    display: block;
+    margin: 20px auto;
+    width: 150px;
+    padding: 10px;
+    background-color: #0078d4; /* Same blue button style */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#validateAction:hover {
+    background-color: #005a9e;
+}
+.chat-context {
+    font-size: 12px;
+    color: #0078d4;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.chat-context:hover {
+    color: #ffcc00;
+    text-decoration: underline;
+}
+#searchContextIcon {
+    font-size: 16px;
+}
+
+.search-context-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: sans-serif;
+  font-size: 13px;
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+#showContextLinkContainer {
+	display: flex;
+	margin-top: 5px;
+	justify-content: center;
+}
+/* Slider Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+}
+
+.switch input { display: none; }
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0;
+  right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 22px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px; width: 16px;
+  left: 3px; bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider { background-color: #0078d4; }
+
+input:checked + .slider:before {
+  transform: translateX(18px);
+}
+
+.search-context-label {
+  user-select: none;
+}
+.help-link {
+  font-size: 20px;
+  color: gray;         /* ✅ valid named color */
+  text-decoration: none;
+  margin-left: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: color 0.1s ease;
+}
+
+.help-link:hover {
+  font-size: 20px;
+  color: gold;         /* ✅ valid named color */
+  text-decoration: none;
+}
+
+#helpButton,
+#helpButton span {
+    text-decoration: none;
+}
+
+.chat-context-update {
+    font-size: 12px;
+    color: #0078d4;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.chat-context-update:hover {
+    color: #ffcc00;
+    text-decoration: underline;
+}
+
+.chat-context-update {
+    font-size: 12px;
+    color: #0078d4;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.chat-context-update:hover {
+    color: #ffcc00;
+    text-decoration: underline;
+}
+
+.divider {
+    font-size: 14px;
+    color: #999;
+    margin: 0 5px;
+}
+/* Document Preview Modal */
+.doc-preview-modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    max-width: 900px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.4);
+    padding: 25px;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
+
+/* Make modal scrollable if content is long */
+.doc-preview-modal .modal-content {
+    max-height: 75vh;
+    overflow-y: auto;
+    padding: 15px;
+	width:95%;
+}
+
+/* Close button styling */
+.doc-preview-modal .close {
+    float: right;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #555;
+}
+
+.doc-preview-modal .close:hover {
+    color: red;
+}
+
+/* Markdown content styling */
+#docModalContent {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+	text-wrap: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+
+/* Improve heading styles inside markdown */
+#docModalContent h1 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#docModalContent h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+#docModalContent p {
+    margin-bottom: 10px;
+}
+
+/* Lists and bullets */
+#docModalContent ul, #docModalContent ol {
+    padding-left: 20px;
+}
+
+/* Code blocks styling */
+#docModalContent pre {
+    background: #f4f4f4;
+    padding: 10px;
+    border-radius: 6px;
+    white-space: pre-wrap;
+    overflow-x: auto;
+    font-family: monospace;
+}
+
+/* Citation icon style */
+.citation-icon {
+    cursor: pointer;
+    font-size: 1.5em;
+    margin: 0 6px;
+    display: inline-block;
+    position: relative; /* 🔹 Ensures stability during scale effect */
+    transition: transform 0.2s ease-in-out;
+    color: #0073e6;
+    transform-origin: center;
+}
+
+.citation-icon:hover {
+    transform: scale(1.1); /* 🔹 Less drastic scaling */
+}
+#chatContainer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* 👈 allows it to expand in flex layout */
+    max-height: calc(100vh - 100px); /* 👈 prevents overflow in taskpane */
+    min-height: 150px;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    resize: vertical;
+}
+
+
+#chatContent {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+#chatResizer {
+    height: 10px;
+    background: #ccc;
+    cursor: ns-resize;
+    text-align: center;
+}
+.loading-gif {
+    width: 50%;
+    height: auto;
+    margin: 10px auto;
+    display: block;
+}
+.chat-message.assistant.loading {
+    text-align: center;
+}
+#formattingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    font-weight: bold;
+    font-family: sans-serif;
+}

@@ -6,7 +6,7 @@ block config
     - var sidenavStyle = 'sb-sidenav-dark'
 
 block content
-    #chat-entry.
+    #chat-entry
         <div class="cht-container">
             <div class="collapsible-container">
                 <div class="chatHeader">
@@ -43,71 +43,88 @@ block content
             <div id="debugData" style="display: none;"></div>
             <!-- JSON display -->
         </div>
-        <!-- Rename Chat Modal -->
-        <div id="renameChatModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeRenameModal()">&times;</span>
-                <h3>Rename Chat</h3>
-                <input type="text" id="newChatName" placeholder="Enter new chat name">
-                <p>
-                    <button onclick="submitRenameChat()">Rename</button>
-                    <button onclick="closeRenameModal()">Cancel</button>
-            </div>
-        </div>
-        <!-- Delete Chat Modal -->
-        <div id="deleteChatModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeDeleteModal()">&times;</span>
-                <h3>Delete Chat</h3>
-                <p>We suggest saving your chat before you delete it since this is an <strong>irrecoverable action</strong>. Would you like to proceed?</p>
-                <button onclick="confirmDeleteChat()">Delete</button>
-                <button onclick="closeDeleteModal()">Cancel</button>
-            </div>
-        </div>
-        <!-- help modal -->
-        <div id="helpModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>Chat Context</h2>
-                <p>Enabling Chat Context allows you to limit queries to a specific subset of project documents.</p>
-                <h3>How to Use Chat Context</h3>
-                <p><strong>Enable:</strong> To enable, just move the slider. You will be redirected to the Data Directory page to set your search context.</p>
-                <p><strong>Show Files:</strong> Once the context is set, you may click the "Show Files" link to confirm which documents will be searched.</p>
-                <p><strong>Update:</strong>Takes you to the Direcotry page to set the search Context.</p>
-                <p><strong>Disable:</strong> To search all documents, just move the slider to the disabled state.</p>
-                <h3>Note</h3>
-                <p><strong>Saved Chats:</strong>Chats with different chat contexts will be saved as separate chats.</p>
-            </div>
-        </div>
-        <!-- Service Packages placeholder -->
-        <div id="servicePackageModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h3>Enabled Packages</h3>
-                <table class="service-table">
-                    <tbody>
-                        <tr>
-                            <td><label><input type="checkbox" name="package" value="basic"> Basic Support</label></td>
-                        </tr>
-                        <tr>
-                            <td><label><input type="checkbox" name="package" value="pro"> Pro Support</label></td>
-                        </tr>
-                        <tr>
-                            <td><label><input type="checkbox" name="package" value="enterprise"> Enterprise Support</label></td>
-                        </tr>
-                        <tr>
-                            <td><label><input type="checkbox" name="package" value="analytics"> Analytics Suite</label></td>
-                        </tr>
-                        <tr>
-                            <td><label><input type="checkbox" name="package" value="compliance"> Compliance Monitoring</label></td>
-                        </tr>
-                        <tr>
-                            <td><label><input type="checkbox" name="package" value="training"> Training Sessions</label></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+            //- Rename Chat Modal
+            #renameChatModal.modal
+              .modal-content
+                span.close(onclick="closeRenameModal()") ×
+                h3 Rename Chat
+                input#newChatName(type="text" placeholder="Enter new chat name")
+                p
+                  button(onclick="submitRenameChat()") Rename
+                  button(onclick="closeRenameModal()") Cancel
+
+            //- Delete Chat Modal
+            #deleteChatModal.modal
+              .modal-content
+                span.close(onclick="closeDeleteModal()") ×
+                h3 Delete Chat
+                p
+                  | We suggest saving your chat before you delete it since this is an 
+                  strong irrecoverable action
+                  | . Would you like to proceed?
+                button(onclick="confirmDeleteChat()") Delete
+
+            <!-- help modal -->
+            #helpModal.modal
+              .modal-content
+                span.close ×
+                h2 Chat Context
+                p Enabling Chat Context allows you to limit queries to a specific subset of project documents.
+                h3 How to Use Chat Context
+                p 
+                  strong Enable:
+                  |  To enable, just move the slider. You will be redirected to the Data Directory page to set your search context.
+                p 
+                  strong Show Files:
+                  |  Once the context is set, you may click the "Show Files" link to confirm which documents will be searched.
+                p 
+                  strong Update:
+                  |  Takes you to the Directory page to set the search Context.
+                p 
+                  strong Disable:
+                  |  To search all documents, just move the slider to the disabled state.
+                h3 Note
+                p 
+                  strong Saved Chats:
+                  | Chats with different chat contexts will be saved as separate chats.
+
+            #servicePackageModal.modal
+              .modal-content
+                span.close ×
+                h3 Enabled Packages
+                table.service-table
+                  tbody
+                    tr
+                      td
+                        label
+                          input(type="checkbox" name="package" value="basic")
+                          |  Basic Support
+                    tr
+                      td
+                        label
+                          input(type="checkbox" name="package" value="pro")
+                          |  Pro Support
+                    tr
+                      td
+                        label
+                          input(type="checkbox" name="package" value="enterprise")
+                          |  Enterprise Support
+                    tr
+                      td
+                        label
+                          input(type="checkbox" name="package" value="analytics")
+                          |  Analytics Suite
+                    tr
+                      td
+                        label
+                          input(type="checkbox" name="package" value="compliance")
+                          |  Compliance Monitoring
+                    tr
+                      td
+                        label
+                          input(type="checkbox" name="package" value="training")
+                          |  Training Sessions
+
 
 append scripts
     script(type="module", src="js/chat-entry.js")
