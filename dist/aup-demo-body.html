@@ -1,0 +1,1083 @@
+<div id="app-container"></div>
+<div class="master-container" id="master-container">
+    <div class="aup-container hidden-until-ready">
+        <div class="aup-navbar"><p style="text-align: center">AUP Checklist Manager</p></div>
+        <div class="blank">&nbsp;</div>
+        <div class="navbar-menu">
+            <div id="btn-review" class="csblue navbar1 nav-button active-tab">
+                <p>🔎 Review Existing Checklists</p>
+                <span class="info">
+                    Share or edit existing checklists
+                    <br />
+                    &nbsp;
+                </span>
+            </div>
+            <div id="btn-configure" class="csblue navbar1 nav-button">
+                <p>📋 Configure a new checklist</p>
+                <span class="info">
+                    Define a data room to continue
+                    <br />
+                    &nbsp;
+                </span>
+            </div>
+        </div>
+        <div id="blankPlaceholder" class="cForm-existing" style="display: none">
+            <div class="project-card">
+                <div class="navbar1 csblue project-header" onclick="toggleChecklist(this)">
+                    <span class="project-title">Rancho Santa Ana</span>
+                    <span class="project-info">Method: Physical</span>
+                    <span class="project-info">Known Risk Count: Gating: 0 Minimal: 0</span>
+                </div>
+                <div class="project-body" style="display: none">
+                    <table class="editable-checklist">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Disposition</th>
+                                <th>Status</th>
+                                <th>Citation</th>
+                                <th>Next Steps</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="bold green" style="">General</td>
+                                <td class="bold green" style=""></td>
+                                <td class="bold green" style=""></td>
+                                <td class="bold green" style=""></td>
+                                <td class="bold green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">EIN Number Documentation</td>
+                                <td class="green" style="">SunProject Sierra II LLC</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="bold yellow" style="">Project Schedule</td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Completed within 4 years</td>
+                                <td class="green" style="">Yes</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow" style="">Completed by Dec 31, 2028</td>
+                                <td class="yellow" style="">PiS after MS</td>
+                                <td class="yellow" style="">⚠️</td>
+                                <td class="yellow" style=""></td>
+                                <td class="yellow" style="">Update schedule 📤</td>
+                            </tr>
+                            <tr>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow bold" style="">On-Site Work</td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Agreement Provided</td>
+                                <td class="green" style="">EPC executed 2/23/2025</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Work Performed</td>
+                                <td class="green" style="">Foundations</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Work Started</td>
+                                <td class="green" style="">Documented at 6/1/2025</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow" style="">Work Documented</td>
+                                <td class="yellow" style="">Geo Location Missing</td>
+                                <td class="yellow" style="">⚠️</td>
+                                <td class="yellow" style="">🗏</td>
+                                <td class="yellow" style="">Update Photos 📤</td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">IE Report</td>
+                                <td class="green" style="">Provided</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Payment Summary</td>
+                                <td class="green" style="">Provided</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Payment Support Documents</td>
+                                <td class="green" style="">Wire on 5/27/2025</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="bold red" style="">Off-Site Work</td>
+                                <td class="bold red" style=""></td>
+                                <td class="bold red" style=""></td>
+                                <td class="bold red" style=""></td>
+                                <td class="bold red" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Purchase Agreement Type</td>
+                                <td class="green" style="">Supply Agreement</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Payment Summary</td>
+                                <td class="green" style="">Provided</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow" style="">Cash Payments</td>
+                                <td class="yellow" style="">Wire on 6/12/2025, 7/25/2025</td>
+                                <td class="yellow" style="">✅</td>
+                                <td class="yellow" style="">🗏</td>
+                                <td class="yellow" style="">Missing MS Payment 4 📤</td>
+                            </tr>
+                            <tr>
+                                <td class="red" style="">Non-Inventory</td>
+                                <td class="red" style="">Revocable</td>
+                                <td class="red" style="">⚠️</td>
+                                <td class="red" style="">🗏</td>
+                                <td class="red" style="">Agreement Amendment 🗏</td>
+                            </tr>
+                            <tr>
+                                <td class="yellow" style="">Serial Numbers/Identifiers</td>
+                                <td class="yellow" style="">No Data Provided</td>
+                                <td class="yellow" style="">⚠️</td>
+                                <td class="yellow" style=""></td>
+                                <td class="yellow" style="">Data Request 📤</td>
+                            </tr>
+                            <tr>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow bold" style="">Mgmt. Certification</td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow" style="">Certification</td>
+                                <td class="yellow" style="">One Signature Missing</td>
+                                <td class="yellow" style="">⚠️</td>
+                                <td class="yellow" style="">🗏</td>
+                                <td class="yellow" style="">Signature Request 📤</td>
+                            </tr>
+                            <tr>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green bold" style="">Optional</td>
+                                <td class="green bold" style=""></td>
+                                <td class="green bold" style=""></td>
+                                <td class="green bold" style=""></td>
+                                <td class="green bold" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="red" style="">COD Estimation Date</td>
+                                <td class="red" style=""></td>
+                                <td class="red" style=""></td>
+                                <td class="red" style=""></td>
+                                <td class="red" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Interconnection Date</td>
+                                <td class="green" style="">No Later than 7/31/2027</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Interconnection Deposit Required</td>
+                                <td class="green" style="">$1,275,277.23 by 4/27/2025</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="red" style="">Interconnection Deposit Paid</td>
+                                <td class="red" style="">No Proof of Payment</td>
+                                <td class="red" style="">❗</td>
+                                <td class="red" style="">🗏</td>
+                                <td class="red" style="">Proof of Payment 📤</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="project-card">
+                <div class="navbar1 csblue project-header-red" onclick="toggleChecklist(this)">
+                    <span class="project-title">West Estates Winery</span>
+                    <span class="project-info">Method: Physical</span>
+                    <span class="project-info">Known Risk Count: Gating: 2 Minimal: 4</span>
+                </div>
+                <div class="project-body" style="display: none">
+                    <table class="editable-checklist">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Disposition</th>
+                                <th>Status</th>
+                                <th>Citation</th>
+                                <th>Next Steps</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="bold green" style="">General</td>
+                                <td class="bold green" style=""></td>
+                                <td class="bold green" style=""></td>
+                                <td class="bold green" style=""></td>
+                                <td class="bold green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">EIN Number Documentation</td>
+                                <td class="green" style="">SunProject Sierra II LLC</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="bold yellow" style="">Project Schedule</td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Completed within 4 years</td>
+                                <td class="green" style="">Yes</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow" style="">Completed by Dec 31, 2028</td>
+                                <td class="yellow" style="">PiS after MS</td>
+                                <td class="yellow" style="">⚠️</td>
+                                <td class="yellow" style=""></td>
+                                <td class="yellow" style="">Update schedule 📤</td>
+                            </tr>
+                            <tr>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow bold" style="">On-Site Work</td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Agreement Provided</td>
+                                <td class="green" style="">EPC executed 2/23/2025</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Work Performed</td>
+                                <td class="green" style="">Foundations</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Work Started</td>
+                                <td class="green" style="">Documented at 6/1/2025</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow" style="">Work Documented</td>
+                                <td class="yellow" style="">Geo Location Missing</td>
+                                <td class="yellow" style="">⚠️</td>
+                                <td class="yellow" style="">🗏</td>
+                                <td class="yellow" style="">Update Photos 📤</td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">IE Report</td>
+                                <td class="green" style="">Provided</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Payment Summary</td>
+                                <td class="green" style="">Provided</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Payment Support Documents</td>
+                                <td class="green" style="">Wire on 5/27/2025</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="bold red" style="">Off-Site Work</td>
+                                <td class="bold red" style=""></td>
+                                <td class="bold red" style=""></td>
+                                <td class="bold red" style=""></td>
+                                <td class="bold red" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Purchase Agreement Type</td>
+                                <td class="green" style="">Supply Agreement</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Payment Summary</td>
+                                <td class="green" style="">Provided</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow" style="">Cash Payments</td>
+                                <td class="yellow" style="">Wire on 6/12/2025, 7/25/2025</td>
+                                <td class="yellow" style="">✅</td>
+                                <td class="yellow" style="">🗏</td>
+                                <td class="yellow" style="">Missing MS Payment 4 📤</td>
+                            </tr>
+                            <tr>
+                                <td class="red" style="">Non-Inventory</td>
+                                <td class="red" style="">Revocable</td>
+                                <td class="red" style="">⚠️</td>
+                                <td class="red" style="">🗏</td>
+                                <td class="red" style="">Agreement Amendment 🗏</td>
+                            </tr>
+                            <tr>
+                                <td class="yellow" style="">Serial Numbers/Identifiers</td>
+                                <td class="yellow" style="">No Data Provided</td>
+                                <td class="yellow" style="">⚠️</td>
+                                <td class="yellow" style=""></td>
+                                <td class="yellow" style="">Data Request 📤</td>
+                            </tr>
+                            <tr>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow bold" style="">Mgmt. Certification</td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow" style="">Certification</td>
+                                <td class="yellow" style="">One Signature Missing</td>
+                                <td class="yellow" style="">⚠️</td>
+                                <td class="yellow" style="">🗏</td>
+                                <td class="yellow" style="">Signature Request 📤</td>
+                            </tr>
+                            <tr>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green bold" style="">Optional</td>
+                                <td class="green bold" style=""></td>
+                                <td class="green bold" style=""></td>
+                                <td class="green bold" style=""></td>
+                                <td class="green bold" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="red" style="">COD Estimation Date</td>
+                                <td class="red" style=""></td>
+                                <td class="red" style=""></td>
+                                <td class="red" style=""></td>
+                                <td class="red" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Interconnection Date</td>
+                                <td class="green" style="">No Later than 7/31/2027</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Interconnection Deposit Required</td>
+                                <td class="green" style="">$1,275,277.23 by 4/27/2025</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="red" style="">Interconnection Deposit Paid</td>
+                                <td class="red" style="">No Proof of Payment</td>
+                                <td class="red" style="">❗</td>
+                                <td class="red" style="">🗏</td>
+                                <td class="red" style="">Proof of Payment 📤</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="project-card">
+                <div class="navbar1 csblue project-header-yellow" onclick="toggleChecklist(this)">
+                    <span class="project-title">Pleasantville Farm</span>
+                    <span class="project-info">Method: Physical</span>
+                    <span class="project-info">Known Risk Count: Gating: 0 Minimal: 4</span>
+                </div>
+                <div class="project-body" style="display: none">
+                    <table class="editable-checklist">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Disposition</th>
+                                <th>Status</th>
+                                <th>Citation</th>
+                                <th>Next Steps</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="bold green" style="">General</td>
+                                <td class="bold green" style=""></td>
+                                <td class="bold green" style=""></td>
+                                <td class="bold green" style=""></td>
+                                <td class="bold green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">EIN Number Documentation</td>
+                                <td class="green" style="">SunProject Sierra II LLC</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="bold yellow" style="">Project Schedule</td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Completed within 4 years</td>
+                                <td class="green" style="">Yes</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow" style="">Completed by Dec 31, 2028</td>
+                                <td class="yellow" style="">PiS after MS</td>
+                                <td class="yellow" style="">⚠️</td>
+                                <td class="yellow" style=""></td>
+                                <td class="yellow" style="">Update schedule 📤</td>
+                            </tr>
+                            <tr>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow bold" style="">On-Site Work</td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Agreement Provided</td>
+                                <td class="green" style="">EPC executed 2/23/2025</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Work Performed</td>
+                                <td class="green" style="">Foundations</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Work Started</td>
+                                <td class="green" style="">Documented at 6/1/2025</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow" style="">Work Documented</td>
+                                <td class="yellow" style="">Geo Location Missing</td>
+                                <td class="yellow" style="">⚠️</td>
+                                <td class="yellow" style="">🗏</td>
+                                <td class="yellow" style="">Update Photos 📤</td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">IE Report</td>
+                                <td class="green" style="">Provided</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Payment Summary</td>
+                                <td class="green" style="">Provided</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Payment Support Documents</td>
+                                <td class="green" style="">Wire on 5/27/2025</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="bold red" style="">Off-Site Work</td>
+                                <td class="bold red" style=""></td>
+                                <td class="bold red" style=""></td>
+                                <td class="bold red" style=""></td>
+                                <td class="bold red" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Purchase Agreement Type</td>
+                                <td class="green" style="">Supply Agreement</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Payment Summary</td>
+                                <td class="green" style="">Provided</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow" style="">Cash Payments</td>
+                                <td class="yellow" style="">Wire on 6/12/2025, 7/25/2025</td>
+                                <td class="yellow" style="">✅</td>
+                                <td class="yellow" style="">🗏</td>
+                                <td class="yellow" style="">Missing MS Payment 4 📤</td>
+                            </tr>
+                            <tr>
+                                <td class="red" style="">Non-Inventory</td>
+                                <td class="red" style="">Revocable</td>
+                                <td class="red" style="">⚠️</td>
+                                <td class="red" style="">🗏</td>
+                                <td class="red" style="">Agreement Amendment 🗏</td>
+                            </tr>
+                            <tr>
+                                <td class="yellow" style="">Serial Numbers/Identifiers</td>
+                                <td class="yellow" style="">No Data Provided</td>
+                                <td class="yellow" style="">⚠️</td>
+                                <td class="yellow" style=""></td>
+                                <td class="yellow" style="">Data Request 📤</td>
+                            </tr>
+                            <tr>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow bold" style="">Mgmt. Certification</td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow" style="">Certification</td>
+                                <td class="yellow" style="">One Signature Missing</td>
+                                <td class="yellow" style="">⚠️</td>
+                                <td class="yellow" style="">🗏</td>
+                                <td class="yellow" style="">Signature Request 📤</td>
+                            </tr>
+                            <tr>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green bold" style="">Optional</td>
+                                <td class="green bold" style=""></td>
+                                <td class="green bold" style=""></td>
+                                <td class="green bold" style=""></td>
+                                <td class="green bold" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="red" style="">COD Estimation Date</td>
+                                <td class="red" style=""></td>
+                                <td class="red" style=""></td>
+                                <td class="red" style=""></td>
+                                <td class="red" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Interconnection Date</td>
+                                <td class="green" style="">No Later than 7/31/2027</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Interconnection Deposit Required</td>
+                                <td class="green" style="">$1,275,277.23 by 4/27/2025</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="red" style="">Interconnection Deposit Paid</td>
+                                <td class="red" style="">No Proof of Payment</td>
+                                <td class="red" style="">❗</td>
+                                <td class="red" style="">🗏</td>
+                                <td class="red" style="">Proof of Payment 📤</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="project-card">
+                <div class="navbar1 csblue project-header" onclick="toggleChecklist(this)">
+                    <span class="project-title">West Parkerville Mall</span>
+                    <span class="project-info">Method: 5%</span>
+                    <span class="project-info">Known Risk Count: Gating: 2 Minimal: 4</span>
+                </div>
+                <div class="project-body" style="display: none">
+                    <table class="editable-checklist">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Disposition</th>
+                                <th>Status</th>
+                                <th>Citation</th>
+                                <th>Next Steps</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="bold green" style="">General</td>
+                                <td class="bold green" style=""></td>
+                                <td class="bold green" style=""></td>
+                                <td class="bold green" style=""></td>
+                                <td class="bold green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">EIN Number Documentation</td>
+                                <td class="green" style="">SunProject Sierra II LLC</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="bold yellow" style="">Project Schedule</td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Completed within 4 years</td>
+                                <td class="green" style="">Yes</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow" style="">Completed by Dec 31, 2028</td>
+                                <td class="yellow" style="">PiS after MS</td>
+                                <td class="yellow" style="">⚠️</td>
+                                <td class="yellow" style=""></td>
+                                <td class="yellow" style="">Update schedule 📤</td>
+                            </tr>
+                            <tr>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow bold" style="">On-Site Work</td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Agreement Provided</td>
+                                <td class="green" style="">EPC executed 2/23/2025</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Work Performed</td>
+                                <td class="green" style="">Foundations</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Work Started</td>
+                                <td class="green" style="">Documented at 6/1/2025</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow" style="">Work Documented</td>
+                                <td class="yellow" style="">Geo Location Missing</td>
+                                <td class="yellow" style="">⚠️</td>
+                                <td class="yellow" style="">🗏</td>
+                                <td class="yellow" style="">Update Photos 📤</td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">IE Report</td>
+                                <td class="green" style="">Provided</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Payment Summary</td>
+                                <td class="green" style="">Provided</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Payment Support Documents</td>
+                                <td class="green" style="">Wire on 5/27/2025</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="bold red" style="">Off-Site Work</td>
+                                <td class="bold red" style=""></td>
+                                <td class="bold red" style=""></td>
+                                <td class="bold red" style=""></td>
+                                <td class="bold red" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Purchase Agreement Type</td>
+                                <td class="green" style="">Supply Agreement</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Payment Summary</td>
+                                <td class="green" style="">Provided</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow" style="">Cash Payments</td>
+                                <td class="yellow" style="">Wire on 6/12/2025, 7/25/2025</td>
+                                <td class="yellow" style="">✅</td>
+                                <td class="yellow" style="">🗏</td>
+                                <td class="yellow" style="">Missing MS Payment 4 📤</td>
+                            </tr>
+                            <tr>
+                                <td class="red" style="">Non-Inventory</td>
+                                <td class="red" style="">Revocable</td>
+                                <td class="red" style="">⚠️</td>
+                                <td class="red" style="">🗏</td>
+                                <td class="red" style="">Agreement Amendment 🗏</td>
+                            </tr>
+                            <tr>
+                                <td class="yellow" style="">Serial Numbers/Identifiers</td>
+                                <td class="yellow" style="">No Data Provided</td>
+                                <td class="yellow" style="">⚠️</td>
+                                <td class="yellow" style=""></td>
+                                <td class="yellow" style="">Data Request 📤</td>
+                            </tr>
+                            <tr>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow bold" style="">Mgmt. Certification</td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                                <td class="yellow bold" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="yellow" style="">Certification</td>
+                                <td class="yellow" style="">One Signature Missing</td>
+                                <td class="yellow" style="">⚠️</td>
+                                <td class="yellow" style="">🗏</td>
+                                <td class="yellow" style="">Signature Request 📤</td>
+                            </tr>
+                            <tr>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                                <td class="" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green bold" style="">Optional</td>
+                                <td class="green bold" style=""></td>
+                                <td class="green bold" style=""></td>
+                                <td class="green bold" style=""></td>
+                                <td class="green bold" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="red" style="">COD Estimation Date</td>
+                                <td class="red" style=""></td>
+                                <td class="red" style=""></td>
+                                <td class="red" style=""></td>
+                                <td class="red" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Interconnection Date</td>
+                                <td class="green" style="">No Later than 7/31/2027</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="green" style="">Interconnection Deposit Required</td>
+                                <td class="green" style="">$1,275,277.23 by 4/27/2025</td>
+                                <td class="green" style="">✅</td>
+                                <td class="green" style="">🗏</td>
+                                <td class="green" style=""></td>
+                            </tr>
+                            <tr>
+                                <td class="red" style="">Interconnection Deposit Paid</td>
+                                <td class="red" style="">No Proof of Payment</td>
+                                <td class="red" style="">❗</td>
+                                <td class="red" style="">🗏</td>
+                                <td class="red" style="">Proof of Payment 📤</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="configForm" class="configForm" style="display: info-message">
+            <div class="form-section">
+                <label>Select Project Source:</label>
+                <div>
+                    <label>
+                        <input type="radio" name="projectSource" value="dropdown" checked="checked" />
+                        Existing
+                    </label>
+                    <label>
+                        <input type="radio" name="projectSource" value="folder" />
+                        Upload
+                    </label>
+                    <p></p>
+                </div>
+                <div id="dropdownContainer"><select id="projectSelector" class="styled-dropdown"></select></div>
+                <div id="folderPickerContainer" style="display: none">
+                    <input type="file" id="folderInput" webkitdirectory style="display: none" />
+                    <button id="fallbackFolderPicker">Select Folder</button>
+                    <span id="selectedFolderName" style="margin-left: 10px; font-style: italic"></span>
+                </div>
+            </div>
+            <div class="form-section">
+                <label for="companyName">Company Name:</label>
+                <input id="companyName" placeholder="Company or Entity Name" />
+            </div>
+            <div class="form-section">
+                <label for="harborSelector">Safe Harboring Method:</label>
+                <select id="harborSelector" class="styled-dropdown"></select>
+            </div>
+            <div class="button-row">
+                <button id="generateChecklistButton" type="button">Generate Checklist</button>
+                <button id="evaluateChecklistButton" type="button">Evaluate Checklist</button>
+            </div>
+        </div>
+        <div id="checklistContainer" class="checklist-wrapper" style="display: none">
+            <div id="tableHeader" style="display: none; margin-bottom: 10px">
+                <h1 class="title">AUP Checklist</h1>
+                <div style="font-size: 14px">
+                    <div>
+                        <strong>Project Name:</strong>
+                        <span id="headerProjectName"></span>
+                    </div>
+                    <div>
+                        <strong>Company Name:</strong>
+                        <span id="headerCompanyName"></span>
+                    </div>
+                    <div>
+                        <strong>Safe Harbor Method:</strong>
+                        <span id="headerHarborName"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-container">
+                <div class="chat-box" id="Tabulate-box">
+                    <div id="loading-message" class="loading-indicator">...</div>
+                    <table id="myTable" style="display: none"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="emailModal" class="email-modal">
+        <div class="email-header">
+            <label>To:</label>
+            <input id="emailTo" class="email-input" />
+            <br />
+            <label>Cc:</label>
+            <input id="emailCc" class="email-input" />
+            <br />
+            <label>Subject:</label>
+            <input id="emailSubject" class="email-input" />
+            <br />
+        </div>
+        <label class="email-body-label">Message:</label>
+        <div id="emailBody" class="email-body" contenteditable="true"></div>
+        <div id="emailAttachments" class="attachment-list"></div>
+        <div class="email-footer"><button id="sendEmailButton">Send</button></div>
+    </div>
+    <div id="sharePanel">
+        <h3>Share AUP</h3>
+        <div>
+            <div class="share-button" id="btn-email"><img src="assets/img/email-send.svg" alt="Project Plan" class="share-icon" /></div>
+            <div class="share-button" id="btn-project"><img src="assets/img/project.svg" alt="Project Plan" class="share-icon" /></div>
+            <div class="share-button" id="btn-excel"><img src="assets/img/excel-file.svg" alt="Open in Excel" class="share-icon" /></div>
+            <div class="share-button" id="btn-share"><img src="assets/img/word-file.svg" alt="Word File" class="share-icon" /></div>
+        </div>
+    </div>
+    <div id="projectPlanModal">
+        <div style="text-align: right"><span id="closeProjectModal" style="cursor: pointer; font-size: 20px">❌</span></div>
+        <div id="modalToggleRow">
+            🟡🔴 Showing: Red + Yellow Only
+            <label class="switch">
+                <input type="checkbox" id="toggleAllRows" />
+                <span class="slider"></span>
+            </label>
+            ✅ All Items
+        </div>
+        <table id="modalChecklistTable"></table>
+        <br />
+        <div style="text-align: center; margin-top: 20px"><button id="createProjectButton" style="padding: 10px 20px; font-size: 16px">🚀 Create Project</button></div>
+    </div>
+</div>
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>

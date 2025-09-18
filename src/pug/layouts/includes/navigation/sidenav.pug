@@ -5,68 +5,44 @@ nav(class=['sb-sidenav', 'accordion'] class=sidenavStyle)#sidenavAccordion
         .nav
     
             .sb-sidenav-menu-heading
-                | Core
+                | Chat & Research
         
             a.nav-link(href='index.html')
-                .sb-nav-link-icon
-                    i.fas.fa-tachometer-alt
-                | Dashboard
-                
-            .sb-sidenav-menu-heading
-                | Interface
+                img(src="assets/img/documentChat.svg", title="Perform ad-hoc or structured queries", alt="Document Chat", height="35", class="me-2")
+                | Document Chat
+            a.nav-link(href='directory.html')
+                img(src="assets/img/directory.svg", title="Review Source Files", alt="Directory", height="35", class="me-2")
+                | Directory
 
-            a.nav-link.collapsed(href='#', data-bs-toggle='collapse' data-bs-target='#collapseLayouts' aria-expanded='false' aria-controls='collapseLayouts')
-                .sb-nav-link-icon
-                    i.fas.fa-columns
-                | Layouts
-                .sb-sidenav-collapse-arrow
-                    i.fas.fa-angle-down
-            #collapseLayouts.collapse(aria-labelledby='headingOne', data-bs-parent='#sidenavAccordion')
-                nav.sb-sidenav-menu-nested.nav
-                    a.nav-link(href='layout-static.html') Static Navigation
-                    a.nav-link(href='layout-sidenav-light.html') Light Sidenav
-            
-            a.nav-link.collapsed(href='#', data-bs-toggle='collapse' data-bs-target='#collapsePages' aria-expanded='false' aria-controls='collapsePages')
-                .sb-nav-link-icon
-                    i.fas.fa-book-open
-                | Pages
-                .sb-sidenav-collapse-arrow
-                    i.fas.fa-angle-down
-            #collapsePages.collapse(aria-labelledby='headingTwo', data-bs-parent='#sidenavAccordion')
-                nav.sb-sidenav-menu-nested.nav.accordion#sidenavAccordionPages
-                    a.nav-link.collapsed(href='#', data-bs-toggle='collapse' data-bs-target='#pagesCollapseAuth' aria-expanded='false' aria-controls='pagesCollapseAuth')
-                        | Authentication
-                        .sb-sidenav-collapse-arrow
-                            i.fas.fa-angle-down
-                    #pagesCollapseAuth.collapse(aria-labelledby='headingOne', data-bs-parent='#sidenavAccordionPages')
-                        nav.sb-sidenav-menu-nested.nav
-                            a.nav-link(href='login.html') Login
-                            a.nav-link(href='register.html') Register
-                            a.nav-link(href='password.html') Forgot Password
-                    a.nav-link.collapsed(href='#', data-bs-toggle='collapse' data-bs-target='#pagesCollapseError' aria-expanded='false' aria-controls='pagesCollapseError')
-                        | Error
-                        .sb-sidenav-collapse-arrow
-                            i.fas.fa-angle-down
-                    #pagesCollapseError.collapse(aria-labelledby='headingOne', data-bs-parent='#sidenavAccordionPages')
-                        nav.sb-sidenav-menu-nested.nav
-                            a.nav-link(href='401.html') 401 Page
-                            a.nav-link(href='404.html') 404 Page
-                            a.nav-link(href='500.html') 500 Page
-                            
             .sb-sidenav-menu-heading
-                | Addons
-            
-            a.nav-link(href='charts.html')
-                .sb-nav-link-icon
-                    i.fas.fa-chart-area
-                | Charts
-                
-            a.nav-link(href='tables.html')
-                .sb-nav-link-icon
-                    i.fas.fa-table
-                | Tables
-                        
+                | Model Analysis 
+            a.nav-link(href='validate.html')
+                img(src="assets/img/modelValidate.svg", title="Validate Model Values", alt="Model Validate", height="35", class="me-2")
+                | Model Validate
+            a.nav-link(href='aup.html')
+                img(src="assets/img/aup.svg", title="Agreed Upon Procedure", alt="Agreed Upon Procedure", height="35", class="me-2")
+                | AUP
+            a.nav-link(href='tabulate.html')
+                img(src="assets/img/tabulate.svg", title="Qualitative Analysis", alt="Model Tabulate", height="35", class="me-2")
+                | Tabulate
+
+            .sb-sidenav-menu-heading
+                | Model Transformation 
+            a.nav-link(href='modelmerge.html')
+                img(src="assets/img/merge.svg", title="Merge Models to a Common Format", alt="Model Merge", height="35", class="me-2")
+                | Model Merge
+
+            .sb-sidenav-menu-heading
+                | Deal Tools
+            a.nav-link(href='checklist.html')
+                img(src="assets/img/checklist.svg", title="Review Closing Checklists", alt="Checklist Manager", height="35", class="me-2")
+                | Checklist Manager
+            a.nav-link(href='dealmanager.html')
+                img(src="assets/img/dealmanager.svg", title="Deal Dashboard", alt="Deal Manager", height="35", class="me-2")
+                | Deal Manager
     .sb-sidenav-footer
         
         .small Logged in as:
-        | Start Bootstrap
+        | user@domain.com
+
+

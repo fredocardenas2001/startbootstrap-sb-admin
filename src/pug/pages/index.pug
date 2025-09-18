@@ -2,86 +2,117 @@ extends ../layouts/dashboard.pug
 
 block config
     - var bodyClass = 'sb-nav-fixed'
-    - var pageTitle = 'Dashboard';
-    - var index = true;
+    - var pageTitle = 'Document Chat'
     - var sidenavStyle = 'sb-sidenav-dark'
-    
-prepend css
-    //- Load Simple DataTables Stylesheet
-    link(href='https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css', rel='stylesheet')
 
 block content
-    .container-fluid.px-4
-        include includes/page-header.pug
-        .row
-            .col-xl-3.col-md-6
-                .card.bg-primary.text-white.mb-4
-                    .card-body
-                        | Primary Card
-                    .card-footer.d-flex.align-items-center.justify-content-between
-                        a(href='#').small.text-white.stretched-link
-                            | View Details
-                        .small.text-white
-                            i.fas.fa-angle-right
-            .col-xl-3.col-md-6
-                .card.bg-warning.text-white.mb-4
-                    .card-body
-                        | Warning Card
-                    .card-footer.d-flex.align-items-center.justify-content-between
-                        a(href='#').small.text-white.stretched-link
-                            | View Details
-                        .small.text-white
-                            i.fas.fa-angle-right
-            .col-xl-3.col-md-6
-                .card.bg-success.text-white.mb-4
-                    .card-body
-                        | Success Card
-                    .card-footer.d-flex.align-items-center.justify-content-between
-                        a(href='#').small.text-white.stretched-link
-                            | View Details
-                        .small.text-white
-                            i.fas.fa-angle-right
-            .col-xl-3.col-md-6
-                .card.bg-danger.text-white.mb-4
-                    .card-body
-                        | Danger Card
-                    .card-footer.d-flex.align-items-center.justify-content-between
-                        a(href='#').small.text-white.stretched-link
-                            | View Details
-                        .small.text-white
-                            i.fas.fa-angle-right
-        .row
-
-            .col-xl-6
-                .card.mb-4
-                    .card-header
-                        i.fas.fa-chart-area.me-1
-                        | Area Chart Example
-                    .card-body
-                        canvas#myAreaChart(width='100%', height='40')
-                    
-            .col-xl-6
-                .card.mb-4
-                    .card-header
-                        i.fas.fa-chart-bar.me-1
-                        | Bar Chart Example
-                    .card-body
-                        canvas#myBarChart(width='100%', height='40')
-        
-        .card.mb-4
-            .card-header
-                i.fas.fa-table.me-1
-                | DataTable Example
-            .card-body
-                include includes/datatable.pug
-
+    #chat-entry.
+        <div class="cht-container">
+            <div class="collapsible-container">
+                <div class="chatHeader">
+                    <button id="chatstat" class="collapsible">
+                    <span id="chatNameLabel" class="chat-name-label" title="Start typing a message below or open a previous chat">No Chat Selected</span>
+                    </button>
+                </div>
+                <div class="chatMenu">
+                    <button class="collapsible" id="previousChatsBtn">Previous Chats</button>
+                    <button class="collapsible" id="chatContext">Chat Context</button>
+                    <button class="collapsible" onclick="clearChatWindow()">Clear Chat</button>
+                </div>
+            </div>
+            <div class="chatStatusContainer" id="chatStatusContainer">
+                <div class="chat-status" id="chatStatus"></div>
+            </div>
+            <div class="session-list-container" id="sessionListContainer">
+                <div class="session-list" id="sessionList"></div>
+            </div>
+            <div id="directoryPanel" class="directory-panel hidden">
+                <div id="directoryContainer"></div>
+            </div>
+            <div class="chat-container">
+                <div class="chat-box" id="chatBox"></div>
+                <div class="message-input-container">
+                    <textarea id="messageInput" placeholder="Open a previous session or just ask a question" onkeydown="handleEnter(event)"></textarea>
+                    <button id="webSearchToggle" type="button" aria-pressed="false" title="Web search: off">🖀</button>
+                    <!-- 🌐   🖀      -->
+                    <button onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+            <div id="showContextLinkContainer"></div>
+            <!-- Holds "Show Files" or button -->
+            <div id="debugData" style="display: none;"></div>
+            <!-- JSON display -->
+        </div>
+        <!-- Rename Chat Modal -->
+        <div id="renameChatModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeRenameModal()">&times;</span>
+                <h3>Rename Chat</h3>
+                <input type="text" id="newChatName" placeholder="Enter new chat name">
+                <p>
+                    <button onclick="submitRenameChat()">Rename</button>
+                    <button onclick="closeRenameModal()">Cancel</button>
+            </div>
+        </div>
+        <!-- Delete Chat Modal -->
+        <div id="deleteChatModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeDeleteModal()">&times;</span>
+                <h3>Delete Chat</h3>
+                <p>We suggest saving your chat before you delete it since this is an <strong>irrecoverable action</strong>. Would you like to proceed?</p>
+                <button onclick="confirmDeleteChat()">Delete</button>
+                <button onclick="closeDeleteModal()">Cancel</button>
+            </div>
+        </div>
+        <!-- help modal -->
+        <div id="helpModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Chat Context</h2>
+                <p>Enabling Chat Context allows you to limit queries to a specific subset of project documents.</p>
+                <h3>How to Use Chat Context</h3>
+                <p><strong>Enable:</strong> To enable, just move the slider. You will be redirected to the Data Directory page to set your search context.</p>
+                <p><strong>Show Files:</strong> Once the context is set, you may click the "Show Files" link to confirm which documents will be searched.</p>
+                <p><strong>Update:</strong>Takes you to the Direcotry page to set the search Context.</p>
+                <p><strong>Disable:</strong> To search all documents, just move the slider to the disabled state.</p>
+                <h3>Note</h3>
+                <p><strong>Saved Chats:</strong>Chats with different chat contexts will be saved as separate chats.</p>
+            </div>
+        </div>
+        <!-- Service Packages placeholder -->
+        <div id="servicePackageModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>Enabled Packages</h3>
+                <table class="service-table">
+                    <tbody>
+                        <tr>
+                            <td><label><input type="checkbox" name="package" value="basic"> Basic Support</label></td>
+                        </tr>
+                        <tr>
+                            <td><label><input type="checkbox" name="package" value="pro"> Pro Support</label></td>
+                        </tr>
+                        <tr>
+                            <td><label><input type="checkbox" name="package" value="enterprise"> Enterprise Support</label></td>
+                        </tr>
+                        <tr>
+                            <td><label><input type="checkbox" name="package" value="analytics"> Analytics Suite</label></td>
+                        </tr>
+                        <tr>
+                            <td><label><input type="checkbox" name="package" value="compliance"> Compliance Monitoring</label></td>
+                        </tr>
+                        <tr>
+                            <td><label><input type="checkbox" name="package" value="training"> Training Sessions</label></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
 append scripts
-    //- Load Chart.js and demos
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js', crossorigin='anonymous')
-    script(src='assets/demo/chart-area-demo.js')
-    script(src='assets/demo/chart-bar-demo.js')
-    
-    //- Load Simple DataTables Scripts
-    script(src='https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js', crossorigin='anonymous')
-    script(src='js/datatables-simple-demo.js')
+    script(type="module", src="js/chat-entry.js")
+    script(src="js/showdown.min.js")
+
+
+prepend css
+    link(rel="stylesheet", href="assets/css/chat.css")

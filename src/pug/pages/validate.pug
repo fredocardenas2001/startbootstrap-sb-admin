@@ -1,0 +1,15 @@
+extends ../layouts/dashboard.pug
+
+block config
+    - var bodyClass = 'sb-nav-fixed'
+    - var pageTitle = 'Dashboard';
+    - var index = true;
+    - var sidenavStyle = 'sb-sidenav-dark'
+    
+prepend css
+    //- Load Simple DataTables Stylesheet
+    link(href='https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css', rel='stylesheet')
+block content
+    .container-fluid.px-4
+        h1.mt-4 Model Validate
+        | Coming soon...

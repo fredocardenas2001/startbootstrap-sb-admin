@@ -3,9 +3,15 @@
 // 
 
 // Add styling for icons used within nav links
-.nav,
+.nav {
+    .nav-link {
+	    color:black;
+	}
+}
+
 .sb-sidenav-menu {
     .nav-link .sb-nav-link-icon {
         margin-right: 0.5rem;
     }
 }
+		

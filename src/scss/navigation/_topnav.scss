@@ -4,7 +4,7 @@
 
 .sb-topnav {
     padding-left: 0;
-    height: $topnav-base-height;
+    height: 70;
     z-index: $zindex-topnav;
 
     .navbar-brand {
@@ -12,11 +12,13 @@
         padding-left: $navbar-padding-x;
         padding-right: $navbar-padding-x;
         margin: 0;
+		color:black;
+		font-weight:600;
     }
 
     &.navbar-dark {
         #sidebarToggle {
-            color: $topnav-dark-toggler-color;
+            color: black;
         }
     }
 

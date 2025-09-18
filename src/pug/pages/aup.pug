@@ -1,0 +1,14 @@
+extends ../layouts/dashboard.pug
+
+block config
+    - var bodyClass = 'sb-nav-fixed'
+    - var pageTitle = 'AUP';
+    - var index = true;
+    - var sidenavStyle = 'sb-sidenav-dark'
+    
+block content
+    #master-container
+        include aup-demo-body.pug
+
+append scripts
+    script(src="js/aup-demo.js")
