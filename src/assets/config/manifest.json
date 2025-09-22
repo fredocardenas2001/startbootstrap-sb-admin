@@ -1,0 +1,20 @@
+{
+  "name": "ContractSmarts Admin Console",
+  "short_name": "AdminConsole",
+  "start_url": "/adminconsole/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#004aad",
+  "icons": [
+    {
+      "src": "/adminconsole/assets/img/documentChat-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/adminconsole/assets/img/documentChat-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
