@@ -1,6 +1,24 @@
 // tabulate.js (fixed clean version)
 
 document.addEventListener("DOMContentLoaded", () => {
+    fetch("assets/config/directory-config.json")
+    .then((res) => {
+      if (!res.ok) throw new Error("Failed to load config JSON");
+      return res.json();
+    })
+    .then((config) => {
+      window.config = config;
+      window.moniker = config.ACCOUNT_MONIKER;
+      window.tabulate_url = config.TABULATE_SUBMISSION_URL;
+
+      console.log("🔧 Loaded config:");
+      console.log("window.moniker =", window.moniker);
+      console.log("window.tabulate_url =", window.tabulate_url);
+    })
+    .catch((err) => {
+      console.error("❌ Config load failed:", err);
+    });
+
   const table = document.getElementById("tabulate");
 
   function classifyCells() {
@@ -138,12 +156,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function submitQueries() {
   const queries = collectQueriesForSubmission();
-
+  if (!queries.length) {
+    console.warn("[tabulate]⚠️ No queries found, submission skipped.");
+    return; 
+  }
   // Build full submission object
   const payload = {
     query_id: crypto.randomUUID(),
     query_submitted: Math.floor(Date.now() / 1000),
-    moniker: window.apiKey, // from config
+    moniker: window.moniker,
     query_configs: {
       search_mode: "advanced",
       rag_generation_config: {
@@ -172,7 +193,7 @@ function submitQueries() {
   console.log("📤 Final submission payload:\n", JSON.stringify(payload, null, 2));
 
   // Send to backend
-  fetch(window.sciPhiUrl, {
+  fetch(window.tabulate_url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -206,10 +227,6 @@ function submitQueries() {
   // Initialize
   classifyCells();
   generateQueries();
-  
-  // Initialize
-	classifyCells();
-	generateQueries();
 
 	// 🔽 Append Submit button after the table
 	const submitContainer = document.createElement("div");
