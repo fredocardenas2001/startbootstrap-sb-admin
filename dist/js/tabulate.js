@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
           cell.classList.add("top-left");
           if (textarea) {
             textarea.classList.add("top-left");
-            textarea.readOnly = false;
+            textarea.readOnly = true;
             textarea.placeholder = "";
           }
         } else if (r === 1 && c >= 2) {
@@ -136,10 +136,15 @@ document.addEventListener("DOMContentLoaded", () => {
     return queries;
   }
 
-  function submitQueries() {
-    const queries = collectQueriesForSubmission();
-    const formattedPayloads = queries.map(({ query }) => ({
-      query,
+function submitQueries() {
+  const queries = collectQueriesForSubmission();
+
+  // Build full submission object
+  const payload = {
+    query_id: crypto.randomUUID(),
+    query_submitted: Math.floor(Date.now() / 1000),
+    moniker: window.apiKey, // from config
+    query_configs: {
       search_mode: "advanced",
       rag_generation_config: {
         model: "azure/gpt-4.1-mini",
@@ -154,10 +159,34 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       include_title_if_available: true,
       task_prompt: "## Task:\nAnswer the given question using the provided context.\n\n## Output Requirements:\n1. Provide a concise answer in 1-2 sentences.\n2. Include citation reference(s).\n\n## Inputs:\nContext: {context}\n\n## Answer:\n"
-    }));
+    },
+    tabulates: queries.map(({ row, col, query }) => ({
+      tabulate_id: crypto.randomUUID(),
+      row,
+      column: col,
+      rag_query: query
+    }))
+  };
 
-    console.log("📤 Final JSON payloads for submission:\n", JSON.stringify(formattedPayloads, null, 2));
-  }
+  // 🔎 Log before sending
+  console.log("📤 Final submission payload:\n", JSON.stringify(payload, null, 2));
+
+  // Send to backend
+  fetch(window.sciPhiUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  })
+    .then(() => {
+      document.querySelector(".submit-feedback").textContent = "Thank you!";
+    })
+    .catch((err) => {
+      console.error("Failed to submit feedback:", err);
+    });
+}
+
 
   table.addEventListener("input", (e) => {
     const cell = e.target.closest("td");
@@ -193,7 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const submitImg = document.createElement("img");
 	submitImg.src = "assets/img/tabulate-data.svg";
-	submitImg.title = "Submit Queries";
+	submitImg.title = "Feed Me!";
 	submitImg.alt = "Submit";
 	submitImg.height = 50;
 

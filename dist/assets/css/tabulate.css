@@ -31,6 +31,10 @@
 	resize: none;
 	border: none;
 	background: #f9f9f9;
+	pointer-events: none;
+	user-select: none;
+	color: transparent;
+	caret-color: transparent;
 }
 
 /* Top row (minus top-left) */
@@ -56,6 +60,8 @@
   width: 200px;
   height: 100px;
   resize: both;  
+  border-radius: 15px;
+  padding: 7px;
 }
 
 #tabulate-container .controls {
