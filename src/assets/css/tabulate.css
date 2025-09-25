@@ -1,0 +1,104 @@
+#tabulate-container {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+	width: auto;
+	margin:13px 5px;
+	padding:3px 0px 0px 7px;
+}
+
+#tabulate-container table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: auto;
+  margin: 0px;
+}
+
+#tabulate-container td {
+  border: 0px solid #ccc;
+  padding: 8px;
+  vertical-align: top;
+  
+}
+
+/* Top-left cell */
+#tabulate-container td.top-left {
+  background: #f9f9f9;
+  border: none;
+ 
+}
+
+#tabulate-container textarea.top-left {
+	resize: none;
+	border: none;
+	background: #f9f9f9;
+}
+
+/* Top row (minus top-left) */
+#tabulate-container td.top-row {
+  /* placeholder for styling */
+}
+
+/* First column (minus top-left) */
+#tabulate-container td.first-col {
+  /* placeholder for styling */
+}
+
+/* All remaining cells (the middle) */
+#tabulate-container td.middle-cell textarea {
+  background-color: #adb5bd;
+  font-family: Courier New;
+  font-weight: 700;
+  color: black;
+}
+
+
+#tabulate-container textarea {
+  width: 200px;
+  height: 100px;
+  resize: both;  
+}
+
+#tabulate-container .controls {
+  margin: 10px 0px 0px 0px;
+  display: flex;
+  justify-content: space-around;
+  width: 500px;
+}
+
+#tabulate-container button {
+    text-decoration: none;
+    background: none;
+    border: none;
+    padding: 8px 15px;
+    border: none;
+	border-radius-24px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+}
+
+#tabulate-container button:hover {
+    background-color: #ff751a;
+	border-radius: 21px;
+}
+
+#tabulate-container .blank-cell {
+    height: 100%;
+    min-height: 60px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+#tabulate-container .col-control,
+#tabulate-container .row-control {
+  text-align: center;
+  vertical-align: middle;
+  padding: 0;
+}
+
+#tabulate-container .submit-container {
+	width: 500px;
+	display: flex;
+	justify-content: center;
+}

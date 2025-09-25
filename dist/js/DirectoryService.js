@@ -527,7 +527,7 @@ this.container.innerHTML = `
 		<h3>Context saved</h3>
 		<p><span class="inlineclose">⇦</span> <br> Back to make changes</p>
 		<p>&nbsp;</p>
-		<p><a href="taskpane.html"><img src="/assets/img/documentChat-32.png"></a><br>Proceed to Chat</p>
+		<p><a href="taskpane.html"><img src="assets/img/documentChat-32.png"></a><br>Proceed to Chat</p>
 	  </div>
 	</div>
 

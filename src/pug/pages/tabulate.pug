@@ -5,11 +5,43 @@ block config
     - var pageTitle = 'Dashboard';
     - var index = true;
     - var sidenavStyle = 'sb-sidenav-dark'
-    
+
 prepend css
     //- Load Simple DataTables Stylesheet
     link(href='https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css', rel='stylesheet')
+    //- Tabulate-specific stylesheet
+    link(rel='stylesheet', href='assets/css/tabulate.css')
+    
+append scripts
+    script(src='js/tabulate.js' defer)
+
 block content
-    .container-fluid.px-4
-        h1.mt-4 Tabulate
-        | Coming soon...
+  #tabulate-container
+    .controls
+      button(type="button", onclick="addRow()")
+        img(src="assets/img/add-row.svg" title="Add Row" height="24px" alt="Add Row")
+      button(type="button", onclick="addColumn()")
+        img(src="assets/img/add-column.svg" title="Add Column" height="24px" alt="Add Column")
+      button(type="button", onclick="location.reload()")
+        img(src="assets/img/start-over.svg" title="Start Over" height="24px"  alt="Reset Table")
+
+    table#tabulate
+        //- Row 0: column delete controls
+        tr
+          td
+          td: button.delete-btn(onclick="deleteColumn(this)")
+          td: button.delete-btn(onclick="deleteColumn(this)")
+
+        //- Row 1: header row
+        tr
+          td
+          td: textarea(placeholder="")
+          td: textarea(placeholder="Query")
+
+        //- Row 2: first data row
+        tr
+          td: button.delete-btn(onclick="deleteRow(2)")
+          td: textarea(placeholder="project or filter")
+          td: textarea(placeholder="")
+          
+
