@@ -113,3 +113,39 @@
 	color: white;
 	background-color: #0078d4;
 }
+
+#results-section {
+  display: none;
+}
+
+#submit-section {
+  display: block;
+}
+
+/* Manifest table container */
+#manifestTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 14px;
+}
+
+/* Header row */
+#manifestTable thead th {
+  background-color: #f4f4f4;
+  text-align: left;
+  padding: 8px;
+  border-bottom: 2px solid #ccc;
+  cursor: pointer; /* so it looks clickable for sorting */
+}
+
+/* Data rows */
+#manifestTable tbody td {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Row hover effect */
+#manifestTable tbody tr:hover {
+  background-color: #f9f9f9;
+}

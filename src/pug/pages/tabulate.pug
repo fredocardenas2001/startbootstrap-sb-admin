@@ -47,11 +47,29 @@ block content
 
           //- Row 2: first data row
           tr
-            td: button.delete-btn(onclick="deleteRow(2)")
+            td: button.delete-btn(onclick="deleteRow(this)")
             td: textarea(placeholder="project or filter")
             td: textarea(placeholder="")
 
-  // Results section
-  #results-section(style="display:none;")
-    .tabulate-container
-      p Coming soon...
+  // Manifest list
+  #results-section
+    table#manifestTable
+      thead
+        tr
+          th Submitted
+          th Completed
+          th Duration
+          th Queries
+      tbody
+
+  // Detail view (hidden until you click a row)
+  #result-detail.tabulate-container(style="display:none")
+    button(type="button", onclick="showManifest()") ⬅ Back to Manifest
+    // detail content injected here by renderResultDetail()
+
+
+
+
+
+
+
