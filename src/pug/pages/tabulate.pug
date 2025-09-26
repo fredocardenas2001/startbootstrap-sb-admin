@@ -16,32 +16,42 @@ append scripts
     script(src='js/tabulate.js' defer)
 
 block content
-  #tabulate-container
-    .controls
-      button(type="button", onclick="addRow()")
-        img(src="assets/img/add-row.svg" title="Add Row" height="24px" alt="Add Row")
-      button(type="button", onclick="addColumn()")
-        img(src="assets/img/add-column.svg" title="Add Column" height="24px" alt="Add Column")
-      button(type="button", onclick="location.reload()")
-        img(src="assets/img/start-over.svg" title="Start Over" height="24px"  alt="Reset Table")
+  // Toggle buttons
+  .tabulate-toggle.tabulate-container
+    button(type="button", id="showSubmit" class="active") Submit New Table
+    button(type="button", id="showResults") View Results
 
-    table#tabulate
-        //- Row 0: column delete controls
-        tr
-          td
-          td: button.delete-btn(onclick="deleteColumn(this)")
-          td: button.delete-btn(onclick="deleteColumn(this)")
+  // Submit section
+  #submit-section
+    .tabulate-container
+      .controls
+        button(type="button", onclick="addRow()")
+          img(src="assets/img/add-row.svg" title="Add Row" height="24px" alt="Add Row")
+        button(type="button", onclick="addColumn()")
+          img(src="assets/img/add-column.svg" title="Add Column" height="24px" alt="Add Column")
+        button(type="button", onclick="location.reload()")
+          img(src="assets/img/start-over.svg" title="Start Over" height="24px"  alt="Reset Table")
 
-        //- Row 1: header row
-        tr
-          td
-          td: textarea(placeholder="")
-          td: textarea(placeholder="Query")
+      table#tabulate
+          //- Row 0: column delete controls
+          tr
+            td
+            td: button.delete-btn(onclick="deleteColumn(this)")
+            td: button.delete-btn(onclick="deleteColumn(this)")
 
-        //- Row 2: first data row
-        tr
-          td: button.delete-btn(onclick="deleteRow(2)")
-          td: textarea(placeholder="project or filter")
-          td: textarea(placeholder="")
-          
+          //- Row 1: header row
+          tr
+            td
+            td: textarea(placeholder="")
+            td: textarea(placeholder="Query")
 
+          //- Row 2: first data row
+          tr
+            td: button.delete-btn(onclick="deleteRow(2)")
+            td: textarea(placeholder="project or filter")
+            td: textarea(placeholder="")
+
+  // Results section
+  #results-section(style="display:none;")
+    .tabulate-container
+      p Coming soon...
