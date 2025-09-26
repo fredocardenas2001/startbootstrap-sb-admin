@@ -1,5 +1,3 @@
-// tabulate.js (fixed clean version)
-
 document.addEventListener("DOMContentLoaded", () => {
     fetch("assets/config/directory-config.json")
     .then((res) => {
@@ -229,25 +227,49 @@ function submitQueries() {
   classifyCells();
   generateQueries();
 
-	// 🔽 Append Submit button after the table
-	const submitContainer = document.createElement("div");
-	submitContainer.className = "submit-container";
-	submitContainer.style.marginTop = "1rem";
+  // 🔽 Append Submit button after the table
+  const submitContainer = document.createElement("div");
+  submitContainer.className = "submit-container";
+  submitContainer.style.marginTop = "1rem";
 
-	const submitBtn = document.createElement("button");
-	submitBtn.type = "button";
-	submitBtn.onclick = submitQueries;
+  const submitBtn = document.createElement("button");
+  submitBtn.type = "button";
+  submitBtn.onclick = submitQueries;
 
-	const submitImg = document.createElement("img");
-	submitImg.src = "assets/img/tabulate-data.svg";
-	submitImg.title = "Feed Me!";
-	submitImg.alt = "Submit";
-	submitImg.height = 50;
+  const submitImg = document.createElement("img");
+  submitImg.src = "assets/img/tabulate-data.svg";
+  submitImg.title = "Feed Me!";
+  submitImg.alt = "Submit";
+  submitImg.height = 50;
 
-	submitBtn.appendChild(submitImg);
-	submitContainer.appendChild(submitBtn);
+  submitBtn.appendChild(submitImg);
+  submitContainer.appendChild(submitBtn);
 
-	// insert after the table
-	table.parentNode.insertBefore(submitContainer, table.nextSibling);
+  table.parentNode.insertBefore(submitContainer, table.nextSibling);
 
+  // --- Tabulate view toggle ---
+  const submitSection = document.getElementById("submit-section");
+  const resultsSection = document.getElementById("results-section");
+  const showSubmitBtn = document.getElementById("showSubmit");
+  const showResultsBtn = document.getElementById("showResults");
+
+  if (submitSection && resultsSection && showSubmitBtn && showResultsBtn) {
+    showSubmitBtn.addEventListener("click", () => {
+      submitSection.style.display = "block";
+      resultsSection.style.display = "none";
+
+      // update active status
+      showSubmitBtn.classList.add("active");
+      showResultsBtn.classList.remove("active");
+    });
+
+    showResultsBtn.addEventListener("click", () => {
+      submitSection.style.display = "none";
+      resultsSection.style.display = "block";
+
+      // update active status
+      showResultsBtn.classList.add("active");
+      showSubmitBtn.classList.remove("active");
+    });
+  }
 });
