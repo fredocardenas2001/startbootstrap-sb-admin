@@ -2,6 +2,7 @@
   "API_USERNAME": "csadmin",
   "API_PASSWORD": "M0r04i10!",
   "API_JSON_URL": "https://static.contractsmarts.ai/",
+  "API_JSON_MANIFEST":"manifest.json",
   "ACCOUNT_MONIKER": "demo.rndJfTy",
   "SOURCE_PLATFORM": "onedrive",
   "SHAREPOINT_BASE_PATH": "/Customer Data/Demo/",
