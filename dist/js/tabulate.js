@@ -162,7 +162,8 @@ function submitQueries() {
   }
   // Build full submission object
   const payload = {
-    query_id: crypto.randomUUID(),
+    item_type: "tabulate",
+	query_id: crypto.randomUUID(),
     query_submitted: Math.floor(Date.now() / 1000),
     moniker: window.moniker,
     query_configs: {
@@ -200,9 +201,9 @@ function submitQueries() {
     },
     body: JSON.stringify(payload)
   })
-    .then(() => {
-      document.querySelector(".submit-feedback").textContent = "Thank you!";
-    })
+    //.then(() => {
+      //document.querySelector(".submit-feedback").textContent = "Thank you!";
+    //})
     .catch((err) => {
       console.error("Failed to submit feedback:", err);
     });
