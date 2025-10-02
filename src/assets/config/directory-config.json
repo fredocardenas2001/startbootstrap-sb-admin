@@ -6,7 +6,7 @@
   "ACCOUNT_MONIKER": "demo.rndJfTy",
   "SOURCE_PLATFORM": "onedrive",
   "SHAREPOINT_BASE_PATH": "/Customer Data/Demo/",
-  "SHAREPOINT_USERNAME": "alfredo@contractsmarts.ai",
+  "SHAREPOINT_USERNAME": "alfredo_contractsmarts_ai",
   "API_JSON_BASE":"onedrive_tree.json",
   "API_JSON_VALIDATE":"cell_mapping.json",
   "API_JSON_TABULATE":"aupchecklist.json",

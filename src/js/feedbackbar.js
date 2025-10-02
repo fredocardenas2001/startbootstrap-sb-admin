@@ -17,7 +17,7 @@ export function createFeedbackBar(sessionId) {
     const rating = container.querySelector(".thumb-button[data-active]")?.dataset?.value || null;
     const comment = container.querySelector(".feedback-comment").value.trim();
     const timestamp = new Date().toISOString();
-    const username = Office?.context?.document?.settings?.get("userName") || "anonymous";
+    const username = (typeof Office !== "undefined" && Office.context?.document?.settings?.get("userName")) || "anonymous";
 
     const payload = {
       username,

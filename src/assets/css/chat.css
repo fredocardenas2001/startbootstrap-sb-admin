@@ -1067,3 +1067,14 @@
 #chat-entry button.icon-btn:hover {
 	background:none;
 }
+#chatContext.context-active { 
+  background-color: #ff751a;
+  border-style: solid;
+  border-width: 5px;
+  border-color: #0078d4;
+  padding: 5px;
+}
+
+#chatContext.context-inactive {
+  background-color: #0078d4;
+}

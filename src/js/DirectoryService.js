@@ -204,7 +204,7 @@ if (item.type === "folder") {
 
   statusIconWrapper.appendChild(statusIcon);
   //statusIconWrapper.appendChild(tooltip);
-  console.log("[DirectoryService][debug]r2rId:", r2rId)
+  //console.log("[DirectoryService][debug]r2rId:", r2rId)
   const sharepointUrl = this.getSharePointDirectLinkFromIndex(r2rId);
 
 
@@ -527,7 +527,7 @@ this.container.innerHTML = `
 		<h3>Context saved</h3>
 		<p><span class="inlineclose">⇦</span> <br> Back to make changes</p>
 		<p>&nbsp;</p>
-		<p><a href="taskpane.html"><img src="assets/img/documentChat-32.png"></a><br>Proceed to Chat</p>
+		<p><a href="index.html"><img src="assets/img/documentChat-32.png"></a><br>Proceed to Chat</p>
 	  </div>
 	</div>
 
@@ -924,7 +924,7 @@ getSharePointDirectLinkFromIndex(documentId) {
   if (!doc) return null;
 
   const base = "https://contractsmarts-my.sharepoint.com";
-  const username = this.config.SHAREPOINT_USERNAME || "error";
+  const username = this.config.SHAREPOINT_USERNAME || "alfredo_contractsmarts_ai";
   const sharepointRoot = this.config.SHAREPOINT_BASE_PATH || "error";
 
   const rawPath = `${sharepointRoot.replace(/\/$/, "")}/${doc.relative_path.replace(/^\/+/, "")}`.replace(/\\/g, "/");
@@ -935,8 +935,13 @@ getSharePointDirectLinkFromIndex(documentId) {
 
   const ext = doc.name.toLowerCase();
   const typeCode = ext.endsWith(".pdf") ? ":b:" : this.getTypeCode(doc.name); // Notice the use of `this.` here too
-
-  return `${base}/${typeCode}/r/personal/${username}/Documents/${encodedPath}`;
+  
+  
+  const finalUrl = `${base}/${typeCode}/r/personal/${username}/Documents/${encodedPath}`;
+  
+  console.log("[directory service] finalUrl = ", finalUrl);
+  //return `${base}/${typeCode}/r/personal/${username}/Documents/${encodedPath}`;
+  return finalUrl;
 }
 
 

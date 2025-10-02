@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
         include_metadatas: true
       },
       include_title_if_available: true,
-      task_prompt: "## Task:\nAnswer the given question using the provided context.\n\n## Output Requirements:\n1. Provide a concise answer in 1-2 sentences.\n2. Include citation reference(s).\n\n## Inputs:\nContext: {context}\n\n## Answer:\n"
+      task_prompt: "## Task:\nAnswer the given question using the provided context.\n\n## Output Requirements:\n1. Provide a concise answer in 1-2 sentences.\n2. Your answer will be rejected unless it includes at least one citation reference in the format: [Source ID: ######].\n\n## Inputs:\nContext: {context}\n\n## Answer:\n"
     },
     tabulates: queries.map(({ row, col, query }) => ({
       tabulate_id: crypto.randomUUID(),
@@ -389,7 +389,7 @@ window.showManifest = showManifest;
       for (let c = 1; c <= maxCol; c++) {      // ✅ start at 1
         const td = document.createElement("td");
         const t = result.tabulates.find(x => x.row === r && x.column === c);
-        td.textContent = t ? (t.rag_result || t.rag_query || "") : "";
+        td.innerHTML = t ? (t.rag_result || t.rag_query || "") : "";
         tr.appendChild(td);
       }
       table.appendChild(tr);

@@ -1,54 +1,19 @@
+import DirectoryService from '../js/DirectoryService.js';
+import { createFeedbackBar } from '../js/feedbackbar.js';
+
 window.currentSessionId = null;
 let config;
 
-// Grab chatBox element once the DOM is ready
-let chatBox;
+let chatBox;  // global, accessible everywhere
 
 document.addEventListener("DOMContentLoaded", () => {
   chatBox = document.getElementById("chatBox");
-
   if (!chatBox) {
-    console.error("❌ chatBox element not found in DOM");
+    console.error("❌ chatBox not found");
+    return;
   }
+  chatBox.innerHTML = "";
 });
-
-
-
-// chat.js
-export function initChatListeners(DirectoryService) {
-  document.addEventListener("DOMContentLoaded", () => {
-    const toggleButton = document.getElementById("chatContext");
-    const panel = document.getElementById("directoryPanel");
-    const container = document.getElementById("directoryContainer");
-    let directoryInstance = null;
-
-    if (!toggleButton || !panel || !container) return;
-
-    toggleButton.addEventListener("click", async () => {
-      const isExpanded = panel.classList.contains("expanded");
-
-      if (isExpanded) {
-        panel.classList.remove("expanded");
-        panel.classList.add("hidden");
-      } else {
-        panel.classList.remove("hidden");
-        panel.classList.add("expanded");
-
-        if (!directoryInstance) {
-          directoryInstance = new DirectoryService({
-            container,
-            autoFetch: true,
-            mode: "native"
-          });
-          await directoryInstance.initialize();
-        }
-      }
-    });
-  });
-}
-
-
-
 
 
 function initializeOnce() {
@@ -118,9 +83,69 @@ async function initializeApp() {
   //console.log("✅ r2rIndex loaded. Sample keys:");
   //console.log(Object.keys(window.r2rIndex).slice(0, 10));
   await loadSessions();
+  updateChatContextButton();
 }
 
+export function initPreviousChats() {
+  const prevBtn = document.getElementById("previousChatsBtn");
+  if (!prevBtn) {
+    console.error("❌ Previous Chats button not found");
+    return;
+  }
+  prevBtn.addEventListener("click", () => {
+    console.log("📜 Previous Chats clicked");
+    // 👉 Replace this comment with your existing previous chats logic
+    // e.g. open a modal, call loadSessions(), whatever you had before
+  });
 
+  console.log("✅ Listener bound to Previous Chats:", prevBtn);
+}
+
+// 🔹 Wire up "Chat Context"
+export function initChatListeners() {
+  const chatContextBtn = document.getElementById("chatContext");
+  const dirPanel       = document.getElementById("directoryPanel");
+  const dirContainer   = document.getElementById("directory-container");
+  let directoryInstance = null;
+
+  if (!chatContextBtn || !dirPanel || !dirContainer) {
+    console.error("❌ Chat Context wiring failed: missing DOM elements");
+    return;
+  }
+
+chatContextBtn.addEventListener("click", async () => {
+  const isExpanded = dirPanel.classList.contains("expanded");
+
+  if (isExpanded) {
+    // collapse
+    dirPanel.classList.remove("expanded");
+    dirPanel.classList.add("hidden");
+  } else {
+    // expand
+    dirPanel.classList.remove("hidden");
+    dirPanel.classList.add("expanded");
+
+    if (!directoryInstance) {
+      directoryInstance = new DirectoryService({
+        container: dirContainer,
+        autoFetch: true,
+        mode: "full"
+      });
+      await directoryInstance.initialize();
+    }
+  }
+});
+
+
+
+  console.log("✅ Listener bound to Chat Context:", chatContextBtn);
+}
+
+// 🔹 Master init that wires both
+export function initAllListeners() {
+  initPreviousChats();
+  initChatListeners();
+}
 async function loadConfig() {
   try {
     const res = await fetch('assets/config/directory-config.json');
@@ -149,10 +174,14 @@ function getSharePointDirectLinkFromIndex(documentId) {
     .join("/");
 
   const ext = doc.name.toLowerCase();
-  const typeCode = ext.endsWith(".pdf") ? ":b:" : getTypeCode(doc.name); // Do NOT include /r here
+  const typeCode = ext.endsWith(".pdf") ? ":b:" : getTypeCode(doc.name);
 
-  return `${base}/${typeCode}/r/personal/${username}/Documents/${encodedPath}`;
+  const finalUrl = `${base}/${typeCode}/r/personal/${username}/Documents/${encodedPath}`;
+  
+  console.log("built URL:", finalUrl);
+  return finalUrl;
 }
+
 
 function getOfficeUriFromSharePointLink(link, fileName = "") {
   const ext = (fileName || '').split('.').pop().toLowerCase();
@@ -236,8 +265,6 @@ console.log("🔎 Updating modal:", { doc_title, uri, summary, citationText });
   document.getElementById("docModalContent").innerHTML = renderedHtml;
 }
 window.openCitationModal = openCitationModal;
-
-
 
 function traverseAndBuildIndex(node, path = "") {
   if (node.type === "file" && node.r2r_id) {
@@ -590,7 +617,17 @@ function loadSessionMessages(sessionId) {
 		return;
 	}
 
-	chatBox.innerHTML = "";
+let chatBox;  // global
+
+document.addEventListener("DOMContentLoaded", () => {
+  chatBox = document.getElementById("chatBox");
+  if (!chatBox) {
+    console.error("❌ chatBox not found");
+    return;
+  }
+  chatBox.innerHTML = "";  // safe
+});
+
 
 (async () => {
   for (const message of messages) {
@@ -854,31 +891,28 @@ async function sendMessage(customMessage = null, sessionId = null) {
 
     // 🔄 Context-Aware Enhancement
     let filters = null;
-    const contextLabel = document.getElementById("searchContextLabel");
-    if (contextLabel?.textContent === "Context Enabled") {
-        const stored = localStorage.getItem("chatContext");
-        if (stored) {
-            try {
-                const parsed = JSON.parse(stored);
-                const fileIds = parsed.selected_items?.map(item => item.r2r_id).filter(Boolean);
-                if (fileIds && fileIds.length > 0) {
-                    filters = {
-                        document_id: {
-                            "$in": fileIds
-                        }
-                    };
-                } else {
-                    console.warn("⚠️ Context is enabled, but no file IDs were found.");
-                }
-            } catch (err) {
-                console.error("❌ Failed to parse chatContext from localStorage:", err);
-            }
-        } else {
-            console.warn("⚠️ Context is enabled, but localStorage has no chatContext.");
-        }
-    }
+  const stored = localStorage.getItem("chatContext");
+  if (stored) {
+    try {
+      const parsed = JSON.parse(stored);
+      const fileIds = parsed.selected_items?.map(item => item.r2r_id).filter(Boolean);
 
-	console.log("🔎 Context Label Text:", contextLabel?.textContent);
+      console.log("🗂️ Selected items:", parsed.selected_items);
+      console.log("✅ Extracted fileIds:", fileIds);
+
+      if (fileIds && fileIds.length > 0) {
+        filters = { document_id: { "$in": fileIds } };
+      } else {
+        console.warn("⚠️ chatContext found, but no file IDs were present.");
+      }
+    } catch (err) {
+      console.error("❌ Failed to parse chatContext from localStorage:", err);
+    }
+  } else {
+    console.log("ℹ️ No chatContext found in localStorage.");
+  }
+
+  window.sendMessage = sendMessage;
 	console.log("📦 localStorage.chatContext:", localStorage.getItem("chatContext"));
 
 	function isWebSearchOn() {
@@ -1446,6 +1480,11 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	}
 	window.submitRenameChat = submitRenameChat;
+  
+  document.addEventListener("DOMContentLoaded", () => {
+    updateChatContextButton();
+  });
+
 });
 
 
@@ -1687,72 +1726,6 @@ function startInlineRename(chatButton, sessionId) {
   });
 }
 
-
-function updateUI() {
-    linkContainer.innerHTML = ""; // Clear previous content
-    buttonContainer.innerHTML = ""; // Clear previous button
-
-    if (toggle.checked) {
-        label.textContent = "Context Enabled";
-
-        if (hasCustomContext) {
-            // ✅ Restore the "Show Files" link and dividers
-            const divider1 = document.createElement("span");
-            divider1.textContent = " | ";
-            divider1.classList.add("divider");
-
-            const linkButton = document.createElement("button");
-            linkButton.textContent = "Show Files";
-            linkButton.classList.add("chat-context");
-            linkButton.onclick = function () {
-                if (debugData.style.display === "none") {
-                    debugData.style.display = "block";
-                    debugData.innerHTML = `<pre>${JSON.stringify(JSON.parse(storedData), null, 2)}</pre>`;
-                    linkButton.textContent = "Show Files";
-                } else {
-                    debugData.style.display = "none";
-                    linkButton.textContent = "Show Files";
-                }
-            };
-
-            const divider2 = document.createElement("span");
-            divider2.textContent = " | ";
-            divider2.classList.add("divider");
-
-            // ✅ Restore the "Update" link
-            const updateLink = document.createElement("button");
-            updateLink.textContent = "Update";
-            updateLink.classList.add("chat-context");
-            updateLink.onclick = function () {
-                window.location.href = "directory.html"; // Redirect to directory.html
-            };
-
-            const divider3 = document.createElement("span");
-            divider3.textContent = " | ";
-            divider3.classList.add("divider");
-
-            // Append everything back in the correct order
-            linkContainer.appendChild(divider1);
-            linkContainer.appendChild(linkButton);
-            linkContainer.appendChild(divider2);
-            linkContainer.appendChild(updateLink);
-            linkContainer.appendChild(divider3);
-        } else {
-            // ✅ Show "Set Chat Context" button if no context is set
-            const setContextButton = document.createElement("button");
-            setContextButton.textContent = "Set Chat Context";
-            setContextButton.classList.add("chat-context-btn");
-            setContextButton.onclick = function () {
-                window.location.href = "directory.html"; // Redirect to directory.html
-            };
-
-            buttonContainer.appendChild(setContextButton);
-            linkContainer.appendChild(buttonContainer);
-        }
-    } else {
-        label.textContent = "Default Search Context";
-    }
-}
 });
 
 
@@ -2211,6 +2184,30 @@ async function saveBlobWithPicker(blob, suggestedName, mime = 'application/octet
   }
 }
 
+function updateChatContextButton() {
+  const btn = document.getElementById("chatContext");
+  if (!btn) return;
+
+  const stored = localStorage.getItem("chatContext");
+  if (stored) {
+    try {
+      const parsed = JSON.parse(stored);
+      const hasIds = parsed.selected_items?.some(item => !!item.r2r_id);
+      if (hasIds) {
+        btn.classList.add("context-active");   // highlight
+        btn.classList.remove("context-inactive");
+        return;
+      }
+    } catch (err) {
+      console.error("❌ Invalid chatContext in localStorage:", err);
+    }
+  }
+
+  // fallback (no context or invalid)
+  btn.classList.remove("context-active");
+  btn.classList.add("context-inactive");
+}
+window.updateChatContextButton = updateChatContextButton;
 
 
 document.addEventListener('click', function (e) {
