@@ -1,5 +1,5 @@
-console.log("🟢 dealmanager.js is running!");
-import "./dealmanager.css";
+console.log("🟢 validate.js is running!");
+import "./validate.css";
 
 document.addEventListener("DOMContentLoaded", async () => {
   while (!window.msalAccount) {
@@ -9,3 +9,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const account = window.msalAccount;
   console.log("✅ User active:", account.username);
 });
+
+console.log("🟢 validate.js is running!");
+import "./validate.css";

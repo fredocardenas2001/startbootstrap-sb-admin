@@ -1,0 +1,21 @@
+{
+  "API_USERNAME": "csadmin",
+  "API_PASSWORD": "M0r04i10!",
+  "API_JSON_URL": "https://static.contractsmarts.ai/",
+  "API_JSON_MANIFEST":"manifest.json",
+  "ACCOUNT_MONIKER": "apricus.c185c32",
+  "SOURCE_PLATFORM": "dropbox",
+  "SHAREPOINT_BASE_PATH": "/Contract Smarts",
+  "SHAREPOINT_USERNAME": "alfredo_contractsmarts_ai",
+  "API_JSON_BASE": "onedrive_tree.json",
+  "API_JSON_VALIDATE": "cell_mapping.json",
+  "API_JSON_TABULATE": "aupchecklist.json",
+  "SCIPHI_API_KEY": "key_vNe2RYJiagevLfOzBofEyQ==.KgOyx-bzy1SSIa1Z3jOYFS62kTluFnSe4XLkG2ae1jk=",
+  "SCIPHI_API_URL": "https://apricus.contractsmarts.ai/v3/",
+  "TABULATE_SUBMISSION_URL": "https://api.contractsmarts.ai/v1/feedback/submit",
+  "REDIRECT_URI": "https://manifest.contractsmarts.ai/apricus-admin/index.html",
+  "CUSTOMER_NAME": "Apricus Generation",
+  "TENANT_ID": "f850425e-0e4b-41b6-8ee9-8ebc92ae346c",
+  "CLIENT_ID": "2fa61cc7-32fd-4d2b-9fd8-8002fa1fd96c",
+  "CLIENT_LOGO": "assets/img/apricus.png"
+}

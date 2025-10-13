@@ -6,3 +6,7 @@ html,
 body {
     height: 100%;
 }
+
+#navbarDropdown.dropdown-toggle::after {
+  border-top-color: #000 !important; /* Force black arrow */
+}

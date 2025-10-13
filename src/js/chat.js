@@ -3,7 +3,6 @@ import { createFeedbackBar } from '../js/feedbackbar.js';
 
 window.currentSessionId = null;
 let config;
-
 let chatBox;  // global, accessible everywhere
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -14,7 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   chatBox.innerHTML = "";
 });
-
 
 function initializeOnce() {
   if (window.__taskpane_initialized) {

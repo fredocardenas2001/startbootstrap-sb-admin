@@ -62,6 +62,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+document.addEventListener("DOMContentLoaded", async () => {
+  while (!window.msalAccount) {
+    await new Promise((r) => setTimeout(r, 50));
+  }
+
+  const account = window.msalAccount;
+  console.log("✅ User active:", account.username);
+});
+
+
   function generateQueries() {
     if (!table || !table.rows || !table.rows[0]) return;
     const rows = table.rows;
