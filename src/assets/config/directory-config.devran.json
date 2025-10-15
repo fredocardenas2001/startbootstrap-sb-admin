@@ -16,6 +16,6 @@
   "REDIRECT_URI": "https://manifest.contractsmarts.ai/devran-admin/index.html",
   "CUSTOMER_NAME": "Contract Smarts (DevRan)",
   "TENANT_ID": "f850425e-0e4b-41b6-8ee9-8ebc92ae346c",
-  "CLIENT_ID": "5b93bcf4-8700-4656-8501-35ae47a44187",
+  "CLIENT_ID": "a485ad42-4d3a-4c9e-ba15-de5b4792eddf",
   "CLIENT_LOGO": "assets/img/user.svg"
 }

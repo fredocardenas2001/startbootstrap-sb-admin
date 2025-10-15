@@ -192,7 +192,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         include_metadatas: true
       },
       include_title_if_available: true,
-      task_prompt: "## Task:\nAnswer the given question using the provided context.\n\n## Output Requirements:\n1. Provide a concise answer in 1-2 sentences.\n2. Your answer will be rejected unless it includes at least one citation reference in the format: [Source ID: ######].\n\n## Inputs:\nContext: {context}\n\n## Answer:\n"
+      task_prompt: `## Task:
+Answer the given question using only the provided context chunks.
+
+## Output Requirements:
+1. Provide a concise answer in 1–2 sentences.
+2. At the end of your answer, include a "Citations" section listing all documents you used.
+3. Do NOT invent sources or cite anything not present in the context.
+4. For each citation, include:
+   - The document title (from metadata.onedrive_name)
+   - The document ID (from id)
+   - The web URL (from metadata.web_url)
+
+## Inputs:
+Context: {context}
+
+## Answer:
+`
     },
     tabulates: queries.map(({ row, col, query }) => ({
       tabulate_id: crypto.randomUUID(),
