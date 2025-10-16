@@ -53,6 +53,10 @@ block content
 
   // Manifest list
   #results-section
+    .results-header
+      button#refreshManifest(type="button")
+        img(src="assets/img/start-over.svg" title="Refresh" height="20px" alt="Refresh Table")
+        | Refresh
     table#manifestTable
       thead
         tr
@@ -62,10 +66,19 @@ block content
           th Queries
       tbody
 
+
   // Detail view (hidden until you click a row)
   #result-detail.tabulate-container(style="display:none")
     button(type="button", onclick="showManifest()") ⬅ Back to Manifest
     // detail content injected here by renderResultDetail()
+  
+  // Submission confirmation modal (hidden by default)
+  #submissionModal.modal-overlay(style="display:none;")
+    .modal-box
+      h2 Submission Sent
+      p#modalMessage Your tabulate query has been submitted successfully.
+      button#modalOkBtn(type="button") OK
+
 
 
 

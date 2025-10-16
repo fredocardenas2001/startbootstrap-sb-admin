@@ -164,32 +164,50 @@ document.addEventListener("DOMContentLoaded", async () => {
     return queries;
   }
 
-  function submitQueries() {
+async function submitQueries() {
+  if (window.tabulateSubmitting) {
+    console.warn("⚠️ Duplicate submit attempt blocked.");
+    return;
+  }
+  window.tabulateSubmitting = true;
+
+  try {
     const queries = collectQueriesForSubmission();
     if (!queries.length) {
-      console.warn("[tabulate]⚠️ No queries found, submission skipped.");
-      return; 
-  }
-  
-  
-  // Build full submission object
-  const payload = {
+      console.warn("[tabulate] ⚠️ No queries found, skipping submission.");
+      return;
+    }
+
+  console.log("🚀 [submitQueries] Starting submission process at", new Date().toLocaleString());
+
+  console.group("📋 Collected Queries");
+  queries.forEach((q, i) => console.log(`→ #${i + 1} [r${q.row},c${q.col}] =`, q.query.trim()));
+  console.groupEnd();
+
+  // Shared ID for all queries in this batch
+  const sharedQueryId = crypto.randomUUID();
+  const submittedTs = Math.floor(Date.now() / 1000);
+  console.log(`🧩 Shared Query ID: ${sharedQueryId}`);
+  console.log(`🕓 Submission Timestamp: ${submittedTs} (${new Date(submittedTs * 1000).toLocaleString()})`);
+
+  // Build static part of config
+  const baseConfig = {
     item_type: "tabulate",
-	query_id: crypto.randomUUID(),
-    query_submitted: Math.floor(Date.now() / 1000),
+    query_id: sharedQueryId,
+    query_submitted: submittedTs,
     moniker: window.moniker,
     query_configs: {
       search_mode: "advanced",
       rag_generation_config: {
         model: "azure/gpt-4.1-mini",
         temperature: 0,
-        max_tokens_to_sample: 512
+        max_tokens_to_sample: 512,
       },
       search_settings: {
         use_hybrid_search: true,
         use_semantic_search: true,
         use_fulltext_search: true,
-        include_metadatas: true
+        include_metadatas: true,
       },
       include_title_if_available: true,
       task_prompt: `## Task:
@@ -208,63 +226,115 @@ Answer the given question using only the provided context chunks.
 Context: {context}
 
 ## Answer:
-`
+`,
     },
-    tabulates: queries.map(({ row, col, query }) => ({
-      tabulate_id: crypto.randomUUID(),
-      row,
-      column: col,
-      rag_query: query
-    }))
   };
 
-  // 🔎 Log before sending
-  console.log("📤 Final submission payload:\n", JSON.stringify(payload, null, 2));
+  // 🔹 For each query cell, create its own payload
+  const payloads = queries.map(({ row, col, query }) => ({
+    ...baseConfig,
+    tabulates: [
+      {
+        tabulate_id: crypto.randomUUID(),
+        row,
+        column: col,
+        rag_query: query,
+      },
+    ],
+  }));
 
-  // Send to backend
-  fetch(window.tabulate_url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
+  console.log(`📦 Preparing ${payloads.length} payload(s) to upload to ${window.tabulate_url}`);
+  console.groupCollapsed("📦 Payload Preview (first 1–2)");
+  payloads.slice(0, 2).forEach((p, i) => {
+    console.log(`Payload #${i + 1}`, JSON.stringify(p, null, 2));
+  });
+  if (payloads.length > 2) console.log(`...and ${payloads.length - 2} more`);
+  console.groupEnd();
+
+  // 🔹 Upload all payloads independently
+  const uploadPromises = payloads.map((p, i) => {
+    console.time(`⏱ Upload ${i + 1}/${payloads.length}`);
+    console.log(`⬆️ Uploading part ${i + 1}/${payloads.length} (tabulate_id=${p.tabulates[0].tabulate_id})`);
+
+    return fetch(window.tabulate_url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(p),
+    })
+      .then((resp) => {
+        console.timeEnd(`⏱ Upload ${i + 1}/${payloads.length}`);
+        if (!resp.ok) throw new Error(`Upload failed (${resp.status})`);
+        console.log(`✅ Upload ${i + 1}/${payloads.length} succeeded`);
+      })
+      .catch((err) => {
+        console.error(`❌ Upload ${i + 1} failed:`, err);
+      });
+  });
+
+  // 🔹 Wait for all uploads to finish
+Promise.all(uploadPromises)
+  .then(() => {
+    console.log("🎯 All partial files uploaded successfully!");
+
+    // 🧹 Clear out previous query text so next run starts clean
+    const table = document.getElementById("tabulate");
+    for (let r = 2; r < table.rows.length; r++) {
+      for (let c = 2; c < table.rows[r].cells.length; c++) {
+        const cell = table.rows[r].cells[c];
+        if (cell && cell.textContent.trim()) {
+          cell.textContent = ""; // clear query
+        }
+      }
+    }
+
+    // optional: regenerate default queries
+    generateQueries();
+
+    // store view preference and reload to results page
+    sessionStorage.setItem("tabulateView", "results");
+    window.location.reload();
   })
-    //.then(() => {
-      //document.querySelector(".submit-feedback").textContent = "Thank you!";
-    //})
-    .catch((err) => {
-      console.error("Failed to submit feedback:", err);
-    });
+  .finally(() => {
+    window.tabulateSubmitting = false;
+  });
+
+
+  } catch (err) {
+    console.error("❌ submitQueries error:", err);
+    window.tabulateSubmitting = false;
+  }
 }
 
-  async function loadManifestAndRender() {
-    try {
-      const username = window.config.API_USERNAME;
-      const password = window.config.API_PASSWORD;
-      const baseUrl = window.config.API_JSON_URL;
-      const manifestName = window.config.API_JSON_MANIFEST;
-      const moniker = window.config.ACCOUNT_MONIKER;
 
-      const basicAuth = btoa(`${username}:${password}`);
-      const jsonPath = `${moniker}/${manifestName}`;
-      const jsonUrl = `${baseUrl}${jsonPath}`;
+async function loadManifestAndRender() {
+  try {
+    const username = window.config.API_USERNAME;
+    const password = window.config.API_PASSWORD;
+    const baseUrl = window.config.API_JSON_URL;
+    const manifestName = window.config.API_JSON_MANIFEST;
+    const moniker = window.config.ACCOUNT_MONIKER;
 
-      console.log("📡 Fetching manifest:", jsonUrl);
+    const basicAuth = btoa(`${username}:${password}`);
+    const jsonPath = `${moniker}/${manifestName}`;
 
-      const resp = await fetch(jsonUrl, {
-        headers: { "Authorization": `Basic ${basicAuth}` }
-      });
-      console.log("🌐 Response status:", resp.status);
-      
-      if (!resp.ok) throw new Error(`Failed to fetch manifest: ${resp.status}`);
-      const manifest = await resp.json();
-      console.log("📄 Raw manifest JSON:", manifest);
+    // ✅ Add timestamp to prevent caching
+    const jsonUrl = `${baseUrl}${jsonPath}?_=${Date.now()}`;
 
-      renderManifestTable(Array.isArray(manifest) ? manifest : [manifest]);
-    } catch (err) {
-      console.error("❌ Manifest load failed:", err);
-    }
+    console.log("📡 Fetching manifest (refresh-safe):", jsonUrl);
+
+    const resp = await fetch(jsonUrl, {
+      headers: { "Authorization": `Basic ${basicAuth}` },
+      cache: "no-store" // ✅ double insurance against caching
+    });
+
+    if (!resp.ok) throw new Error(`Failed to fetch manifest: ${resp.status}`);
+    const manifest = await resp.json();
+    renderManifestTable(Array.isArray(manifest) ? manifest : [manifest]);
+  } catch (err) {
+    console.error("❌ Manifest load failed:", err);
   }
+}
+
 
   function renderManifestTable(entries) {
     console.log("📝 Starting to render manifest table with entries:", entries.length);
@@ -378,21 +448,6 @@ Context: {context}
     }
   }
 
-function showManifest() {
-  const resultsSection = document.getElementById("results-section");
-  const resultDetailEl = document.getElementById("result-detail");
-
-  if (resultsSection && resultDetailEl) {
-    // show the manifest list
-    resultsSection.style.display = "block";
-    // hide the detail panel
-    resultDetailEl.style.display = "none";
-  }
-}
-window.showManifest = showManifest;
-
-
-
   function renderResultDetail(result) {
     const container = document.getElementById("result-detail");
     container.innerHTML = "<button type='button' onclick='showManifest()'>⬅ Back to Manifest</button>";
@@ -438,7 +493,6 @@ window.showManifest = showManifest;
   window.addColumn = addColumn;
   window.deleteRow = deleteRow;
   window.deleteColumn = deleteColumn;
-  window.submitQueries = submitQueries;
 
   // Initialize
   classifyCells();
@@ -451,11 +505,26 @@ window.showManifest = showManifest;
 
   const submitBtn = document.createElement("button");
   submitBtn.type = "button";
-  submitBtn.onclick = submitQueries;
+
+  // 🧹 Prevent accidental double-binding
+  submitBtn.replaceWith = null;        // just for safety
+  submitBtn.removeEventListener("click", submitQueries); // in case it's reused
+  submitBtn.onclick = null;            // clear any previous inline handler
+  submitBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    if (submitBtn.disabled) return;
+    submitBtn.disabled = true;
+    try {
+      await submitQueries();
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
 
   const submitImg = document.createElement("img");
   submitImg.src = "assets/img/tabulate-data.svg";
-  submitImg.title = "Feed Me!";
+  submitImg.title = "Feed Me Seymour!";
   submitImg.alt = "Submit";
   submitImg.height = 50;
 
@@ -464,36 +533,59 @@ window.showManifest = showManifest;
 
   table.parentNode.insertBefore(submitContainer, table.nextSibling);
 
-  // --- Tabulate view toggle ---
-  const submitSection = document.getElementById("submit-section");
-  const showSubmitBtn = document.getElementById("showSubmit");
-  const showResultsBtn = document.getElementById("showResults");
-  const detailSection = document.getElementById("result-detail");
-  const resultsSection = document.getElementById("results-section");
 
-
-
-  if (submitSection && showSubmitBtn && showResultsBtn) {
-    showSubmitBtn.addEventListener("click", () => {
-      submitSection.style.display = "block";
-      resultsSection.style.display = "none";
-      showSubmitBtn.classList.add("active");
-      showResultsBtn.classList.remove("active");
-
-      // 🔹 Hide any open accordion rows when leaving results
-      document.querySelectorAll("#manifestTable .accordion-body").forEach(row => {
-        row.remove();
-      });
-    });
-
-    showResultsBtn.addEventListener("click", () => {
-      submitSection.style.display = "none";
-      resultsSection.style.display = "block";
-      showResultsBtn.classList.add("active");
-      showSubmitBtn.classList.remove("active");
-    });
-
+// ✅ Unified cleanup helper
+function hideResultDetail() {
+  const resultDetailEl = document.getElementById("result-detail");
+  if (resultDetailEl) {
+    resultDetailEl.style.display = "none";
+    const table = resultDetailEl.querySelector(".tabulate-container");
+    if (table) table.remove();
   }
+}
+
+// ✅ Show manifest (back button)
+function showManifest() {
+  const resultsSection = document.getElementById("results-section");
+  if (resultsSection) resultsSection.style.display = "block";
+  hideResultDetail();
+}
+window.showManifest = showManifest;
+
+// --- Tabulate view toggle ---
+const submitSection = document.getElementById("submit-section");
+const showSubmitBtn = document.getElementById("showSubmit");
+const showResultsBtn = document.getElementById("showResults");
+const detailSection = document.getElementById("result-detail");
+const resultsSection = document.getElementById("results-section");
+
+if (submitSection && showSubmitBtn && showResultsBtn) {
+  showSubmitBtn.addEventListener("click", () => {
+    submitSection.style.display = "block";
+    resultsSection.style.display = "none";
+    showSubmitBtn.classList.add("active");
+    showResultsBtn.classList.remove("active");
+
+    // 🔹 Hide any open accordion rows when leaving results
+    document.querySelectorAll("#manifestTable .accordion-body").forEach(row => {
+      row.remove();
+    });
+
+    // ✅ Hide detail view when starting a new table
+    hideResultDetail();
+  });
+
+  showResultsBtn.addEventListener("click", () => {
+    submitSection.style.display = "none";
+    resultsSection.style.display = "block";
+    showResultsBtn.classList.add("active");
+    showSubmitBtn.classList.remove("active");
+
+    // ✅ Hide any leftover tabulate result when switching to manifest view
+    hideResultDetail();
+  });
+}
+
   function toggleManifest() {
     const container = document.getElementById("manifestContainer");
     if (!container) return;
@@ -501,7 +593,39 @@ window.showManifest = showManifest;
   }
 window.toggleManifest = toggleManifest;
 
+// ✅ Handle modal OK click → switch to results view
+const okBtn = document.getElementById("modalOkBtn");
+if (okBtn) {
+  okBtn.addEventListener("click", () => {
+    const modal = document.getElementById("submissionModal");
+    if (modal) modal.style.display = "none";
+
+    // 🔄 Switch to results screen automatically
+    const showResultsBtn = document.getElementById("showResults");
+    if (showResultsBtn) showResultsBtn.click();  // triggers your existing toggle
+  });
+}
+
+// ✅ Refresh manifest table button
+const refreshBtn = document.getElementById("refreshManifest");
+if (refreshBtn) {
+  refreshBtn.addEventListener("click", () => {
+    console.log("🔄 Refreshing manifest table...");
+    loadManifestAndRender();
+  });
+}
+
+// ✅ Restore correct tab after reload
+const view = sessionStorage.getItem("tabulateView");
+if (view === "results") {
+  document.getElementById("showResults")?.click();
+  sessionStorage.removeItem("tabulateView");
+}
+
+
 });
+
+
 
 // 🔹 Simple vanilla sorter for #manifestTable (dates, "Running", mm:ss, numbers, text)
 (function enableTableSorting() {
