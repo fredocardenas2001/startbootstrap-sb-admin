@@ -14,7 +14,7 @@
   "SCIPHI_API_URL": "https://demo.contractsmarts.ai/v3/",
   "TABULATE_SUBMISSION_URL": "https://api.contractsmarts.ai/v1/feedback/submit",
   "REDIRECT_URI": "https://manifest.contractsmarts.ai/adminconsole/index.html",
-  "CUSTOMER_NAME": "Contract Smarts (Demo)",
+  "CUSTOMER_NAME": "ContractSmarts (Demo)",
   "TENANT_ID": "f850425e-0e4b-41b6-8ee9-8ebc92ae346c",
   "CLIENT_ID": "9dd13801-f97b-4422-8d2c-ea09e5f5427e",
   "CLIENT_LOGO": "assets/img/contractsmarts-64.png"

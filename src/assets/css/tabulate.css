@@ -109,6 +109,31 @@
 	justify-content: center;
 }
 
+.tabulate-container .tab-navbar {
+    background: #0078d4;
+    text-align: center;
+    font-weight: bold;
+    width: 95%;
+    border-radius: 15px;
+    gap: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    padding: 10px 15px;
+    font-size: 16px;
+    position: relative;
+}
+
+.tabulate-container .tab-navbar a {
+    text-decoration: none;
+    color: white;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
+
 .tabulate-toggle button.active {
 	color: white;
 	background-color: #0078d4;
@@ -205,4 +230,61 @@
 
 #refreshManifest:hover {
   background: #ff751a;
+}
+/* === Base Results table layout === */
+.tabulate-container-results {
+  border-collapse: collapse;
+  margin-top: 1em;
+  width: 100%;
+  table-layout: fixed;  
+}
+
+.tabulate-container-results td {
+  border: 1px solid #ccc;
+  padding: 8px 10px;
+  min-width: 160px;
+  vertical-align: top;
+  background-color: #fff;
+  word-wrap: break-word;
+}
+/* === Cell state styles === */
+.filled-cell {
+  background-color: #fefefe;
+}
+
+.empty-cell {
+  background-color: #eef4ff;
+  color: #777;
+  text-align: center;
+}
+
+/* === New: source (query) + result layout === */
+.cell-query {
+  font-size: 0.85em;
+  color: #666;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 4px;
+  padding-bottom: 2px;
+}
+
+.cell-result {
+  margin-top: 4px;
+  font-size: 0.95em;
+  color: #000;
+}
+
+/* Optional: subtle hover effect */
+.tabulate-container td:hover {
+  background-color: #f3f9ff;
+  transition: background-color 0.2s ease;
+}
+
+.introjs-tooltip {
+  border-radius: 10px;
+  background-color: #fff;
+  color: #333;
+}
+
+.introjs-helperLayer {
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.4);
 }

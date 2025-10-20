@@ -20,6 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
   const table = document.getElementById("tabulate");
+  let groupedResults = {};
+
 
   function classifyCells() {
     if (!table || !table.rows || !table.rows[0]) return;
@@ -191,26 +193,87 @@ async function submitQueries() {
   console.log(`🕓 Submission Timestamp: ${submittedTs} (${new Date(submittedTs * 1000).toLocaleString()})`);
 
   // Build static part of config
-  const baseConfig = {
-    item_type: "tabulate",
-    query_id: sharedQueryId,
-    query_submitted: submittedTs,
-    moniker: window.moniker,
-    query_configs: {
-      search_mode: "advanced",
-      rag_generation_config: {
-        model: "azure/gpt-4.1-mini",
-        temperature: 0,
-        max_tokens_to_sample: 512,
-      },
-      search_settings: {
-        use_hybrid_search: true,
-        use_semantic_search: true,
-        use_fulltext_search: true,
-        include_metadatas: true,
-      },
-      include_title_if_available: true,
-      task_prompt: `## Task:
+const baseConfig = {
+  item_type: "tabulate",
+  query_id: sharedQueryId,
+  query_submitted: submittedTs,
+  moniker: window.moniker,
+  schema_version: "1.1",
+
+  // ✅ Correct table metadata (reads from <textarea> values and correct indices)
+  table_meta: (() => {
+    const tbl = document.getElementById("tabulate");
+    if (!tbl || !tbl.rows || !tbl.rows[0]) {
+      return { num_rows: 0, num_cols: 0, header_row: [], row_labels: [], coordinates: [] };
+    }
+
+    const rows = tbl.rows;
+    const totalRows = rows.length;
+    const totalCols = rows[0].cells.length;
+
+    // helper to read either textarea.value or fallback to textContent
+    const getCellValue = (cell) => {
+      const ta = cell?.querySelector("textarea");
+      return (ta ? ta.value : cell?.textContent || "").trim();
+    };
+
+    // ⚠️ Structure recap:
+    // row 0: control header row
+    // row 1: column headers (data headers start at col 2)
+    // rows >=2: data rows
+    // col 0: control column
+    // col 1: row labels (label text lives here)
+    // cols >=2: data columns
+
+    const num_rows = Math.max(0, totalRows - 2);      // data rows only
+    const num_cols = Math.max(0, totalCols - 2);      // data cols only
+
+    // Column headers from row 1, columns 2..end
+    const header_row = totalRows > 1
+      ? Array.from(rows[1].cells)
+          .slice(2)
+          .map(getCellValue)
+      : [];
+
+    // Row labels from column 1, rows 2..end
+    const row_labels = totalRows > 2
+      ? Array.from(rows)
+          .slice(2)
+          .map(r => getCellValue(r.cells[1]))
+      : [];
+
+    // Snapshot of all query cells (row, col, query)
+    const coordinates = collectQueriesForSubmission().map(q => ({
+      row: q.row,
+      col: q.col,
+      query: q.query,
+    }));
+
+    // Optional: basic sanity logging
+    console.groupCollapsed("🧭 table_meta preview");
+    console.log("num_rows:", num_rows, "num_cols:", num_cols);
+    console.log("header_row:", header_row);
+    console.log("row_labels:", row_labels);
+    console.log("coordinates:", coordinates);
+    console.groupEnd();
+
+    return { num_rows, num_cols, header_row, row_labels, coordinates };
+  })(),
+  query_configs: {
+    search_mode: "advanced",
+    rag_generation_config: {
+      model: "azure/gpt-4.1-mini",
+      temperature: 0,
+      max_tokens_to_sample: 512,
+    },
+    search_settings: {
+      use_hybrid_search: true,
+      use_semantic_search: true,
+      use_fulltext_search: true,
+      include_metadatas: true,
+    },
+    include_title_if_available: true,
+    task_prompt: `## Task:
 Answer the given question using only the provided context chunks.
 
 ## Output Requirements:
@@ -227,8 +290,9 @@ Context: {context}
 
 ## Answer:
 `,
-    },
-  };
+  },
+};
+
 
   // 🔹 For each query cell, create its own payload
   const payloads = queries.map(({ row, col, query }) => ({
@@ -336,93 +400,120 @@ async function loadManifestAndRender() {
 }
 
 
-  function renderManifestTable(entries) {
-    console.log("📝 Starting to render manifest table with entries:", entries.length);
-    const tbody = document.querySelector("#manifestTable tbody");
-    if (!tbody) {
-      console.error("❌ Could not find #manifestTable tbody");
-      return;
-    }
-    tbody.innerHTML = "";
+function renderManifestTable(entries) {
+  console.log("📝 Starting to render manifest table with entries:", entries.length);
+  const tbody = document.querySelector("#manifestTable tbody");
+  if (!tbody) {
+    console.error("❌ Could not find #manifestTable tbody");
+    return;
+  }
+  tbody.innerHTML = "";
 
-    entries
-      .filter(e => {
-        const keep = e && e.filename;
-        console.log("🔍 Checking entry:", e, "→ keep?", keep);
-        return keep;
-      })
-      .sort((a, b) => (b.query_submitted || 0) - (a.query_submitted || 0)) // newest first
-      .forEach(entry => {
-        try {
-          console.log("➕ Rendering row for:", entry);
-          const tr = document.createElement("tr");
+  // 🔍 Filter valid entries
+  const validEntries = entries.filter(e => e && e.filename && e.query_id);
+  console.log(`📦 Valid entries: ${validEntries.length}`);
 
-          const submitted = new Date(entry.query_submitted * 1000);
-          console.log("   📅 Submitted:", entry.query_submitted, "→", submitted.toLocaleString());
-          
-          const completed = entry.query_returned && entry.query_returned !== false
-            ? new Date(entry.query_returned * 1000)
-            : null;
-          console.log("   ✅ Completed:", entry.query_returned, "→", completed ? completed.toLocaleString() : "Running");
+  // 🧩 Group all entries by query_id
+  const grouped = {};
+  for (const e of validEntries) {
+    const qid = e.query_id;
+    if (!grouped[qid]) grouped[qid] = [];
+    grouped[qid].push(e);
+  }
 
-          const duration = (completed && entry.query_submitted)
-            ? (entry.query_returned - entry.query_submitted)
-            : null;
-          console.log("   ⏱ Duration:", duration);
+  // 🧮 Sort by latest query_submitted (or query_returned) timestamp per query_id
+  const sortedGroups = Object.entries(grouped).sort(([, a], [, b]) => {
+    const aLatest = Math.max(...a.map(e => e.query_returned || e.query_submitted || 0));
+    const bLatest = Math.max(...b.map(e => e.query_returned || e.query_submitted || 0));
+    return bLatest - aLatest;
+  });
 
-          const tdSubmitted = document.createElement("td");
-          tdSubmitted.textContent = submitted.toLocaleString();
-          tr.appendChild(tdSubmitted);
+  // 🧱 Render one row per query_id group
+  for (const [qid, group] of sortedGroups) {
+    try {
+      // Get latest timestamps
+      const latest = group.reduce((prev, curr) => {
+        const prevTs = prev.query_returned || prev.query_submitted || 0;
+        const currTs = curr.query_returned || curr.query_submitted || 0;
+        return currTs > prevTs ? curr : prev;
+      });
 
-          const tdCompleted = document.createElement("td");
-          tdCompleted.textContent = completed
-            ? completed.toLocaleString()
-            : "Running";
-          tr.appendChild(tdCompleted);
+      const submitted = new Date((latest.query_submitted || 0) * 1000);
+      const completed = latest.query_returned
+        ? new Date(latest.query_returned * 1000)
+        : null;
 
-          const tdDuration = document.createElement("td");
-          if (duration) {
-            const mm = String(Math.floor(duration / 60)).padStart(2, "0");
-            const ss = String(duration % 60).padStart(2, "0");
-            tdDuration.textContent = `${mm}:${ss}`;
-          } else {
-            tdDuration.textContent = "--";
-          }
-          tr.appendChild(tdDuration);
+      const duration = completed && latest.query_submitted
+        ? (latest.query_returned - latest.query_submitted)
+        : null;
 
-          const tdQueries = document.createElement("td");
-          tdQueries.textContent = entry.query_num || 0;
-          tr.appendChild(tdQueries);
+      const tr = document.createElement("tr");
+      tr.dataset.queryId = qid;
 
-          tr.style.cursor = "pointer";
-          tr.style.cursor = "pointer";
-          tr.style.cursor = "pointer";
-          tr.addEventListener("click", () => {
-            console.log("🖱 Row clicked → opening result for:", entry.filename);
+      // 📅 Submitted
+      const tdSubmitted = document.createElement("td");
+      tdSubmitted.textContent = submitted.toLocaleString();
+      tr.appendChild(tdSubmitted);
 
-            // Fetch and render the tabulate result (rebuilds table from row/col coords)
-            openResult(entry);
+      // ✅ Completed (latest)
+      const tdCompleted = document.createElement("td");
+      tdCompleted.textContent = completed ? completed.toLocaleString() : "Running";
+      tr.appendChild(tdCompleted);
 
-            // Toggle sections: hide manifest, show detail
-            const resultsSection = document.getElementById("results-section");
-            const resultDetailEl = document.getElementById("result-detail");
-            if (resultsSection) resultsSection.style.display = "none";
-            if (resultDetailEl) resultDetailEl.style.display = "block";
-          });
-
-
-
-        tbody.appendChild(tr);
-
-      } catch (err) {
-        console.warn("⚠️ Skipping bad entry:", entry, err);
+      // ⏱ Duration (based on latest)
+      const tdDuration = document.createElement("td");
+      if (duration) {
+        const mm = String(Math.floor(duration / 60)).padStart(2, "0");
+        const ss = String(Math.floor(duration % 60)).padStart(2, "0");
+        tdDuration.textContent = `${mm}:${ss}`;
+      } else {
+        tdDuration.textContent = "--";
       }
-    });
+      tr.appendChild(tdDuration);
 
+      // 🔢 Total tabulates in this query_id batch
+      const tdQueries = document.createElement("td");
+      tdQueries.textContent = group.length; // sum of all tabulate_id entries
+      tr.appendChild(tdQueries);
 
+      // 🧩 Click handler: fetch and show full group
+      tr.style.cursor = "pointer";
+      tr.addEventListener("click", async () => {
+        console.log(`🖱 Row clicked → loading all results for query_id: ${qid}`);
 
-    console.log("✅ Finished rendering manifest table");
+        const results = [];
+        for (const entry of group) {
+          const username = window.config.API_USERNAME;
+          const password = window.config.API_PASSWORD;
+          const baseUrl = window.config.API_JSON_URL;
+          const moniker = window.config.ACCOUNT_MONIKER;
+          const basicAuth = btoa(`${username}:${password}`);
+          const jsonUrl = `${baseUrl}${moniker}/${entry.filename}`;
+
+          console.log("📡 Fetching result:", jsonUrl);
+          const resp = await fetch(jsonUrl, { headers: { "Authorization": `Basic ${basicAuth}` } });
+          if (resp.ok) results.push(await resp.json());
+        }
+
+        // Render all JSONs for this query_id together
+        renderResultDetail(results);
+
+        // Toggle visibility: hide manifest, show detail
+        const resultsSection = document.getElementById("results-section");
+        const resultDetailEl = document.getElementById("result-detail");
+        if (resultsSection) resultsSection.style.display = "none";
+        if (resultDetailEl) resultDetailEl.style.display = "block";
+      });
+
+      tbody.appendChild(tr);
+    } catch (err) {
+      console.warn("⚠️ Skipping bad group:", qid, err);
+    }
+  }
+
+  console.log("✅ Finished rendering manifest table (one row per query_id, latest timestamps)");
 }
+
 
   // Open JSON result and render tabulate table
   async function openResult(entry) {
@@ -442,42 +533,80 @@ async function loadManifestAndRender() {
       if (!resp.ok) throw new Error(`Failed to fetch result: ${resp.status}`);
       const result = await resp.json();
 
-      renderResultDetail(result);
+      // 🧩 Group by query_id
+      const qid = result.query_id;
+      if (!groupedResults[qid]) groupedResults[qid] = [];
+      groupedResults[qid].push(result);
+
+      // 🧩 Render all results belonging to this query_id (multi-cell table)
+      renderResultDetail(groupedResults[qid]);
+
     } catch (err) {
       console.error("❌ Failed to load result:", err);
     }
   }
 
-  function renderResultDetail(result) {
-    const container = document.getElementById("result-detail");
-    container.innerHTML = "<button type='button' onclick='showManifest()'>⬅ Back to Manifest</button>";
 
-    if (!result || !Array.isArray(result.tabulates)) {
-      container.innerHTML += "<p>⚠️ No valid tabulates found.</p>";
-      return;
-    }
+async function renderResultDetail(resultOrGroup) {
+  const container = document.getElementById("result-detail");
+  container.innerHTML = "<button type='button' onclick='showManifest()'>⬅ Back to Manifest</button>";
 
-    const maxRow = Math.max(...result.tabulates.map(t => t.row));
-    const maxCol = Math.max(...result.tabulates.map(t => t.column));
-
-    console.log("📐 Table size → rows:", maxRow, "cols:", maxCol);
-
-    const table = document.createElement("table");
-    table.className = "tabulate-container";
-
-    for (let r = 1; r <= maxRow; r++) {        // ✅ start at 1
-      const tr = document.createElement("tr");
-      for (let c = 1; c <= maxCol; c++) {      // ✅ start at 1
-        const td = document.createElement("td");
-        const t = result.tabulates.find(x => x.row === r && x.column === c);
-        td.innerHTML = t ? (t.rag_result || t.rag_query || "") : "";
-        tr.appendChild(td);
-      }
-      table.appendChild(tr);
-    }
-
-    container.appendChild(table);
+  // 🧩 Normalize: accept either one result or an array of same-query_id results
+  const results = Array.isArray(resultOrGroup) ? resultOrGroup : [resultOrGroup];
+  const allTabulates = results.flatMap(r => r.tabulates || []);
+  if (!allTabulates.length) {
+    container.innerHTML += "<p>⚠️ No valid tabulates found.</p>";
+    return;
   }
+
+  // 💡 Extract metadata from the first entry
+  const { query_id, moniker } = results[0];
+  container.innerHTML += `
+    <p>Results for Query ID: ${query_id}</p>
+  `;
+
+  // 🧮 Determine dynamic bounds
+  const rows = allTabulates.map(t => t.row);
+  const cols = allTabulates.map(t => t.column);
+  const minRow = Math.min(...rows);
+  const maxRow = Math.max(...rows);
+  const minCol = Math.min(...cols);
+  const maxCol = Math.max(...cols);
+
+  console.log(`📐 Table bounds for ${query_id} → rows ${minRow}–${maxRow}, cols ${minCol}–${maxCol}`);
+
+  // 🧱 Build table
+  const table = document.createElement("table");
+  table.className = "tabulate-container-results";
+
+for (let r = minRow; r <= maxRow; r++) {
+  const tr = document.createElement("tr");
+
+  for (let c = minCol; c <= maxCol; c++) {
+    const td = document.createElement("td");
+    const t = allTabulates.find(x => x.row === r && x.column === c);
+
+    if (t) {
+      // 🧩 Build cell content with query source (rag_query) and result
+      const queryText = t.rag_query ? `<div class="cell-query"><strong>Q:</strong> ${t.rag_query}</div>` : "";
+      const resultText = t.rag_result ? `<div class="cell-result"><strong>A:</strong> ${t.rag_result}</div>` : "";
+      td.innerHTML = `${queryText}${resultText}` || "<em>Empty</em>";
+      td.classList.add("filled-cell");
+    } else {
+      td.innerHTML = "<em>Pending...</em>";
+      td.classList.add("empty-cell");
+    }
+
+    tr.appendChild(td);
+  }
+
+  table.appendChild(tr);
+}
+
+
+  container.appendChild(table);
+}
+
 
 
   table.addEventListener("input", (e) => {

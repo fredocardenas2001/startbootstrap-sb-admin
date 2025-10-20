@@ -1,5 +1,37 @@
 block scripts
+
+    //- Intro.js script
+    script(src="https://unpkg.com/intro.js/minified/intro.min.js")
+
+
     //- Load Bootstrap JS Bundle
     script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js', crossorigin='anonymous')
+
     //- Load Global Template Scripts
     script(src='js/scripts.js')
+
+    //- Highlight active page in sidebar
+    script.
+        document.addEventListener("DOMContentLoaded", () => {
+          const current = window.location.pathname.split("/").pop();
+          document.querySelectorAll(".sb-sidenav-menu a.nav-link").forEach(link => {
+            const href = link.getAttribute("href");
+            if (href === current) {
+              link.classList.add("active");
+            } else {
+              link.classList.remove("active");
+            }
+          });
+        });
+
+    script.
+      document.addEventListener("DOMContentLoaded", () => {
+        const helpBtn = document.getElementById("helpBtn");
+        if (helpBtn) {
+          helpBtn.addEventListener("click", () => {
+            const tour = introJs.tour();
+            tour.start();
+          });
+        }
+      });
+
