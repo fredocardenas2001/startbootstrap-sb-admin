@@ -1,6 +1,6 @@
 {
-  "API_USERNAME": "csadmin",
-  "API_PASSWORD": "M0r04i10!",
+  "API_USERNAME": "admin",
+  "API_PASSWORD": "CcehmStKpzw9vctI1GIxCA",
   "API_JSON_URL": "https://static.contractsmarts.ai/",
   "API_JSON_MANIFEST":"manifest.json",
   "ACCOUNT_MONIKER": "eng.dev123",
@@ -10,7 +10,7 @@
   "API_JSON_BASE": "onedrive_tree.json",
   "API_JSON_VALIDATE": "cell_mapping.json",
   "API_JSON_TABULATE": "aupchecklist.json",
-  "SCIPHI_API_KEY": "key_p6gpvLy5e0CBv9drzzHA6Q==.R2V_VfHpDfe12zo-YsIsCrult2hVZ7EKf-Mg9NrN_wA=",
+  "SCIPHI_API_KEY": "key_GNLv-TpVb9Q7QO9zVgmQxA==.dAakyHjPPnUCkwM-FcQeauHIQvmyCJaPlQ3z_MBchMk=",
   "SCIPHI_API_URL": "https://eng.contractsmarts.ai/v3/",
   "TABULATE_SUBMISSION_URL": "https://api.contractsmarts.ai/v1/feedback/submit",
   "REDIRECT_URI": "https://manifest.contractsmarts.ai/eng-admin/index.html",

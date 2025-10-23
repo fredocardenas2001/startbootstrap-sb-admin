@@ -939,7 +939,7 @@ getSharePointDirectLinkFromIndex(documentId) {
   
   const finalUrl = `${base}/${typeCode}/r/personal/${username}/Documents/${encodedPath}`;
   
-  console.log("[directory service] finalUrl = ", finalUrl);
+  //console.log("[directory service] finalUrl = ", finalUrl);
   //return `${base}/${typeCode}/r/personal/${username}/Documents/${encodedPath}`;
   return finalUrl;
 }

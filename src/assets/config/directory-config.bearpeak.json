@@ -1,6 +1,6 @@
 {
-  "API_USERNAME": "csadmin",
-  "API_PASSWORD": "M0r04i10!",
+  "API_USERNAME": "admin",
+  "API_PASSWORD": "CcehmStKpzw9vctI1GIxCA",
   "API_JSON_URL": "https://static.contractsmarts.ai/",
   "API_JSON_MANIFEST":"manifest.json",
   "ACCOUNT_MONIKER": "bearpeak.855a3d9",
@@ -10,7 +10,7 @@
   "API_JSON_BASE": "onedrive_tree.json",
   "API_JSON_VALIDATE": "cell_mapping.json",
   "API_JSON_TABULATE": "aupchecklist.json",
-  "SCIPHI_API_KEY": "key_NW-gzyv7ldDy1KxD-4oZvw==.FoFogIAHq_Vzpg9uF5heavoOAUlcChoblBFE4pAAPmE=",
+  "SCIPHI_API_KEY": "key_0f-BgCddiK5XmVWkHdFOKQ==.W_OXPXY8_XF4w7-lUBxnbaOI1bvCnnnfCj3LJ3mdQfs=",
   "SCIPHI_API_URL": "https://bearpeakpower.contractsmarts.ai/v3/",
   "TABULATE_SUBMISSION_URL": "https://api.contractsmarts.ai/v1/feedback/submit",
   "REDIRECT_URI": "https://manifest.contractsmarts.ai/bearpeakpower-admin/index.html",
