@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
+  if (window._tabulateLoaded) return;
+  window._tabulateLoaded = true;
+
     fetch("assets/config/directory-config.json")
     .then((res) => {
       if (!res.ok) throw new Error("Failed to load config JSON");
@@ -60,14 +63,13 @@ function classifyCells() {
 }
 
 
-document.addEventListener("DOMContentLoaded", async () => {
+// ✅ MSAL readiness check — inline (no nested DOMContentLoaded)
+(async () => {
   while (!window.msalAccount) {
     await new Promise((r) => setTimeout(r, 50));
   }
-
-  const account = window.msalAccount;
-  console.log("✅ User active:", account.username);
-});
+  console.log("✅ User active:", window.msalAccount.username);
+})();
 
 
   function generateQueries() {
@@ -169,7 +171,7 @@ function addRow() {
     const queries = [];
     const rows = table.rows;
     for (let r = 2; r < rows.length; r++) {
-      for (let c = 2; c < rows[r].cells.length; c++) {
+      for (let c = 3; c < rows[r].cells.length; c++) {
         const textarea = rows[r].cells[c].querySelector("textarea");
         const value = textarea?.value?.trim();
         if (value) {
@@ -181,6 +183,8 @@ function addRow() {
   }
 
 async function submitQueries() {
+  console.count("🛰 submitQueries fired");
+
   if (window.tabulateSubmitting) {
     console.warn("⚠️ Duplicate submit attempt blocked.");
     return;
@@ -188,6 +192,9 @@ async function submitQueries() {
   window.tabulateSubmitting = true;
 
   try {
+    const table = document.getElementById("tabulate");
+    const rows = table ? table.rows : [];
+
     const queries = collectQueriesForSubmission();
     if (!queries.length) {
       console.warn("[tabulate] ⚠️ No queries found, skipping submission.");
@@ -357,7 +364,7 @@ Promise.all(uploadPromises)
     // 🧹 Clear out previous query text so next run starts clean
     const table = document.getElementById("tabulate");
     for (let r = 2; r < table.rows.length; r++) {
-      for (let c = 2; c < table.rows[r].cells.length; c++) {
+      for (let c = 3; c < rows[r].cells.length; c++) {
         const cell = table.rows[r].cells[c];
         if (cell && cell.textContent.trim()) {
           cell.textContent = ""; // clear query
@@ -370,7 +377,7 @@ Promise.all(uploadPromises)
 
     // store view preference and reload to results page
     sessionStorage.setItem("tabulateView", "results");
-    window.location.reload();
+    //window.location.reload();
   })
   .finally(() => {
     window.tabulateSubmitting = false;
@@ -381,6 +388,8 @@ Promise.all(uploadPromises)
     console.error("❌ submitQueries error:", err);
     window.tabulateSubmitting = false;
   }
+  console.log("🧩 [debug] submission finished, no reload so we can inspect logs");
+
 }
 
 
@@ -641,40 +650,39 @@ for (let r = minRow; r <= maxRow; r++) {
   classifyCells();
   generateQueries();
 
-  // 🔽 Append Submit button after the table
-  const submitContainer = document.createElement("div");
-  submitContainer.className = "submit-container";
-  submitContainer.style.marginTop = "1rem";
+// 🔽 Append Submit button after the table
+const submitContainer = document.createElement("div");
+submitContainer.className = "submit-container";
+submitContainer.style.marginTop = "1rem";
 
-  const submitBtn = document.createElement("button");
-  submitBtn.type = "button";
+const submitBtn = document.createElement("button");
+submitBtn.type = "button";
 
-  // 🧹 Prevent accidental double-binding
-  submitBtn.replaceWith = null;        // just for safety
-  submitBtn.removeEventListener("click", submitQueries); // in case it's reused
-  submitBtn.onclick = null;            // clear any previous inline handler
-  submitBtn.addEventListener("click", async (e) => {
-    e.preventDefault();
-    if (submitBtn.disabled) return;
-    submitBtn.disabled = true;
-    try {
-      await submitQueries();
-    } finally {
-      submitBtn.disabled = false;
-    }
-  });
+// 🧹 Prevent accidental double-binding
+submitBtn.replaceWith = null;
+submitBtn.removeEventListener("click", submitQueries);
+submitBtn.onclick = null;
+submitBtn.addEventListener("click", async (e) => {
+  e.preventDefault();
+  if (submitBtn.disabled) return;
+  submitBtn.disabled = true;
+  try {
+    await submitQueries();
+  } finally {
+    submitBtn.disabled = false;
+  }
+});
 
+const submitImg = document.createElement("img");
+submitImg.src = "assets/img/tabulate-data.svg";
+submitImg.title = "Feed Me Seymour!";
+submitImg.alt = "Submit";
+submitImg.height = 50;
 
-  const submitImg = document.createElement("img");
-  submitImg.src = "assets/img/tabulate-data.svg";
-  submitImg.title = "Feed Me Seymour!";
-  submitImg.alt = "Submit";
-  submitImg.height = 50;
+submitBtn.appendChild(submitImg);
+submitContainer.appendChild(submitBtn);
+table.parentNode.insertBefore(submitContainer, table.nextSibling);
 
-  submitBtn.appendChild(submitImg);
-  submitContainer.appendChild(submitBtn);
-
-  table.parentNode.insertBefore(submitContainer, table.nextSibling);
 
 
 // ✅ Unified cleanup helper
