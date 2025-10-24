@@ -23,46 +23,42 @@ document.addEventListener("DOMContentLoaded", () => {
   let groupedResults = {};
 
 
-  function classifyCells() {
-    if (!table || !table.rows || !table.rows[0]) return;
-    const rows = table.rows;
-    const rowCount = rows.length;
-    const colCount = rows[0].cells.length;
+function classifyCells() {
+  if (!table || !table.rows || !table.rows[0]) return;
+  const rows = table.rows;
+  const rowCount = rows.length;
+  const colCount = rows[0].cells.length;
 
-    for (let r = 0; r < rowCount; r++) {
-      for (let c = 0; c < colCount; c++) {
-        const cell = rows[r].cells[c];
-        const textarea = cell.querySelector("textarea");
-        cell.className = "";
+  for (let r = 0; r < rowCount; r++) {
+    for (let c = 0; c < colCount; c++) {
+      const cell = rows[r].cells[c];
+      const textarea = cell.querySelector("textarea");
+      cell.className = "";
 
-        if (r === 0 && c === 0) {
-          cell.classList.add("corner-cell");
-        } else if (r === 0) {
-          cell.classList.add("col-control");
-        } else if (r === 1 && c === 0) {
-          cell.classList.add("header-corner");
-        } else if (r === 1 && c === 1) {
-          cell.classList.add("top-left");
-          if (textarea) {
-            textarea.classList.add("top-left");
-            textarea.readOnly = true;
-            textarea.placeholder = "";
-          }
-        } else if (r === 1 && c >= 2) {
-          cell.classList.add("top-row");
-          if (textarea) textarea.readOnly = false;
-        } else if (r >= 2 && c === 0) {
-          cell.classList.add("row-control");
-        } else if (r >= 2 && c === 1) {
-          cell.classList.add("first-col");
-          if (textarea) textarea.readOnly = false;
-        } else if (r >= 2 && c >= 2) {
-          cell.classList.add("middle-cell");
-          if (textarea) textarea.readOnly = true;
-        }
+      if (r === 0 && c <= 2 ) {
+        cell.classList.add("corner-cell");
+      } else if (r === 0 && c >= 3 ) {
+        cell.classList.add("del-col");
+      } else if (r === 1 && c === 0) {
+        cell.classList.add("dir-control");
+      } else if (r === 1 && c === 1) {
+        cell.classList.add("del-btn");
+      } else if (r === 1 && c === 2) {
+        cell.classList.add("corner-cell");
+      } else if (r === 1 && c >= 3) {
+        cell.classList.add("first-row");
+        if (textarea) textarea.readOnly = false;
+      } else if (r >= 2 && c === 2) {
+        cell.classList.add("first-col");
+        if (textarea) textarea.readOnly = false;
+      } else if (r >= 2 && c >= 3) {
+        cell.classList.add("middle-cell");
+        if (textarea) textarea.readOnly = true;
       }
     }
   }
+}
+
 
 document.addEventListener("DOMContentLoaded", async () => {
   while (!window.msalAccount) {
@@ -81,10 +77,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const colCount = rows[0].cells.length;
 
     for (let r = 2; r < rowCount; r++) {
-      const rowLabelEl = rows[r].cells[1]?.querySelector("textarea");
+      const rowLabelEl = rows[r].cells[2]?.querySelector("textarea");
       const rowLabel = rowLabelEl ? rowLabelEl.value.trim() : "";
 
-      for (let c = 2; c < colCount; c++) {
+      for (let c = 3; c < colCount; c++) {
         const colHeaderEl = rows[1].cells[c]?.querySelector("textarea");
         const colHeader = colHeaderEl ? colHeaderEl.value.trim() : "";
 
@@ -96,19 +92,37 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  function addRow() {
-    const newRow = table.insertRow(-1);
-    for (let c = 0; c < table.rows[0].cells.length; c++) {
-      const newCell = newRow.insertCell(c);
-      if (c === 0) {
-        newCell.innerHTML = `<button class="delete-btn" onclick="deleteRow(this)"><img src="assets/img/delete-row2.svg" title="Delete Row" height="24px"️></button>`;
-      } else {
-        newCell.innerHTML = `<textarea></textarea>`;
-      }
+function addRow() {
+  const table = document.getElementById("tabulate");
+  if (!table) return;
+
+  const newRow = table.insertRow(-1);
+  const colCount = table.rows[0].cells.length;
+
+  for (let c = 0; c < colCount; c++) {
+    const newCell = newRow.insertCell(c);
+
+    if (c === 0) {
+      const dirBtn = document.createElement("button");
+      dirBtn.textContent = "Directory";
+      dirBtn.addEventListener("click", () => {
+        console.log(`Directory button pressed (row ${newRow.rowIndex})`);
+      });
+      newCell.appendChild(dirBtn);
+    } else if (c === 1) {
+      newCell.innerHTML = `
+        <button class="delete-btn" onclick="deleteRow(this)">
+          <img src="assets/img/delete-row2.svg" title="Delete Row" height="24px">
+        </button>`;
+    } else {
+      newCell.innerHTML = `<textarea></textarea>`;
     }
-    classifyCells();
-    generateQueries();
   }
+
+  classifyCells();
+  generateQueries();
+}
+
 
   function addColumn() {
     const rows = table.rows;
@@ -612,7 +626,7 @@ for (let r = minRow; r <= maxRow; r++) {
   table.addEventListener("input", (e) => {
     const cell = e.target.closest("td");
     if (!cell) return;
-    if (cell.classList.contains("top-row") || cell.classList.contains("first-col")) {
+    if (cell.classList.contains("first-row") || cell.classList.contains("first-col")) {
       generateQueries();
     }
   });

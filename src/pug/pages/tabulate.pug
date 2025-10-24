@@ -40,23 +40,25 @@ block content
           img(src="assets/img/start-over.svg" title="Start Over" height="24px"  alt="Reset Table")
 
       table#tabulate
-          //- Row 0: column delete controls
           tr
             td
-            td: button.delete-btn(onclick="deleteColumn(this)")
-            td: button.delete-btn(onclick="deleteColumn(this)")
+            td
+            td
+            td: button.col-control(onclick="deleteColumn(this)")
 
-          //- Row 1: header row
           tr
             td
-            td: textarea(placeholder="")
+            td
+            td
             td: textarea(placeholder="Query")
 
-          //- Row 2: first data row
           tr
-            td: button.delete-btn(onclick="deleteRow(this)")
+            td
+              button(onclick="console.log('Directory button pressed (row 2)')") Directory
+            td
             td: textarea(placeholder="project or filter")
             td: textarea(placeholder="")
+
 
   // Manifest list
   #results-section

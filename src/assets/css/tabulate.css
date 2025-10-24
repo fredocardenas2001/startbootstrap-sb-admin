@@ -16,9 +16,14 @@
 .tabulate-container td {
   border: 0px solid #ccc;
   padding: 8px;
-  vertical-align: top;
+  vertical-align: middle;
   
 }
+/*
+.tabulate-container tr{
+  align: center;
+}
+*/
 
 /* Top-left cell */
 .tabulate-container td.top-left {
