@@ -180,19 +180,21 @@
   background-color: #ff751a;
 }
 
+/* Center modal overlay on the page */
 .modal-overlay {
-  position: fixed;
+  position: fixed;        /* stays in place on scroll */
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.4);  /* dimmed backdrop */
+  display: flex;                /* use flexbox centering */
+  align-items: center;          /* vertical center */
+  justify-content: center;      /* horizontal center */
+  z-index: 9999;
 }
 
+/* your existing box styling can stay */
 .modal-box {
   background: #fff;
   border-radius: 10px;
@@ -202,6 +204,7 @@
   max-width: 400px;
   width: 80%;
 }
+
 
 #modalOkBtn {
   margin-top: 16px;
@@ -292,4 +295,86 @@
 
 .introjs-helperLayer {
   box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.4);
+}
+#directoryPanel.hidden {
+  display: none;
+}
+
+#directoryPanel.expanded {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--bs-body-bg, #fff);
+  overflow: auto;
+}
+
+/* When open, display as flex so centering works */
+#submissionModal.show {
+  display: flex;
+}
+/* Ensure submission modal centers regardless of other .modal rules */
+#submissionModal.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.4);
+  z-index: 9999;
+}
+
+#submissionModal .modal-box {
+  background: #fff;
+  border-radius: 10px;
+  padding: 24px 32px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+  text-align: center;
+  max-width: 400px;
+  width: 80%;
+}
+/* ---- Tabulate Controls Layer ---- */
+.controls {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  background: #f8f9fb;                 /* soft neutral background */
+  padding: 8px 12px;
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15); /* subtle 3D lift */
+  margin: 10px 0 20px 0;
+  position: relative;
+  z-index: 10;                          /* ensure it sits above table */
+}
+
+/* Optional: give the container a floating "layer" look */
+.controls::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(240,240,240,0.6));
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Button appearance */
+.controls button {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 4px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+}
+
+.controls button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  border-color: #0078d4;  /* light accent hover border */
+}
+
+.controls img {
+  display: block;
+  pointer-events: none;
 }

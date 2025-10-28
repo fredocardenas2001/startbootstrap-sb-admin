@@ -2,96 +2,21 @@ extends ../layouts/dashboard.pug
 
 block config
     - var bodyClass = 'sb-nav-fixed'
-    - var pageTitle = 'Dashboard';
-    - var index = true;
+    - var pageTitle = 'Tabulate'
     - var sidenavStyle = 'sb-sidenav-dark'
-
-prepend css
-    //- Load Simple DataTables Stylesheet
-    link(href='https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css', rel='stylesheet')
-    //- Tabulate-specific stylesheet
-    link(rel='stylesheet', href='assets/css/tabulate.css')
-    
-append scripts
-    script(src='js/tabulate.js' defer)
+    - var index = true
 
 block content
+    #tabulateMountPoint
+    #directoryPanel.hidden
+        #directory-container
 
-  // Title
-  .tabulate-container
-    .tab-navbar
-        span.navbar-title Tabulate
+append scripts
+    // Load Tabulate entry module
+    script(type='module', src='js/tabulate-entry.js')
 
-  
-  // Toggle buttons
-  .tabulate-toggle.tabulate-container
-    button(type="button", id="showSubmit" class="active") Submit New Table
-    button(type="button", id="showResults") View Previous Results
-
-  // Submit section
-  #submit-section
-    .tabulate-container
-      .controls
-        button(type="button", onclick="addRow()")
-          img(src="assets/img/add-row.svg" title="Add Row" height="24px" alt="Add Row")
-        button(type="button", onclick="addColumn()")
-          img(src="assets/img/add-column.svg" title="Add Column" height="24px" alt="Add Column")
-        button(type="button", onclick="location.reload()")
-          img(src="assets/img/start-over.svg" title="Start Over" height="24px"  alt="Reset Table")
-
-      table#tabulate
-          tr
-            td
-            td
-            td
-            td: button.col-control(onclick="deleteColumn(this)")
-
-          tr
-            td
-            td
-            td
-            td: textarea(placeholder="Query")
-
-          tr
-            td
-              button(onclick="console.log('Directory button pressed (row 2)')") Directory
-            td
-            td: textarea(placeholder="project or filter")
-            td: textarea(placeholder="")
-
-
-  // Manifest list
-  #results-section
-    .results-header
-      button#refreshManifest(type="button")
-        img(src="assets/img/start-over.svg" title="Refresh" height="20px" alt="Refresh Table")
-        | Refresh
-    table#manifestTable
-      thead
-        tr
-          th Submitted
-          th Completed
-          th Duration
-          th Queries
-      tbody
-
-
-  // Detail view (hidden until you click a row)
-  #result-detail.tabulate-container(style="display:none")
-    button(type="button", onclick="showManifest()") ⬅ Back to Manifest
-    // detail content injected here by renderResultDetail()
-  
-  // Submission confirmation modal (hidden by default)
-  #submissionModal.modal-overlay(style="display:none;")
-    .modal-box
-      h2 Submission Sent
-      p#modalMessage Your tabulate query has been submitted successfully.
-      button#modalOkBtn(type="button") OK
-
-
-
-
-
-
-
+prepend css
+    link(href='https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css', rel='stylesheet')
+    link(rel='stylesheet', href='assets/css/tabulate.css')
+    link(rel='stylesheet', href='assets/css/directory.css')
 
