@@ -7,7 +7,13 @@ class Tabulate {
 
     // Internal state for results view
     this._groupedResults = {};
+
+    // 🗂️ Track per-column directories and file selections
+    this.directoryInstances = {};
+    this.selectedFilesByRow = {};
+    this.activeDirectoryInstance = null;
   }
+
 
   async initialize() {
     if (!this.container) {
@@ -43,6 +49,7 @@ class Tabulate {
     // Expose a couple of helpers for inline handlers we render
     window.deleteColumn = (btn) => this.deleteColumn(btn);
     window.showManifest = () => this.showManifest();
+
   }
 
   // ---------------------------
@@ -109,7 +116,6 @@ class Tabulate {
             <button id="addColumn"><img src="assets/img/add-column.svg" title="Add Column" height="24"></button>
             <button id="resetTable"><img src="assets/img/start-over.svg" title="Start Over" height="24"></button>
           </div>
-
           <table id="tabulate">
             <tr>
               <td></td><td></td><td></td>
@@ -120,12 +126,12 @@ class Tabulate {
               </td>
             </tr>
             <tr>
-              <td></td><td></td><td></td><td><textarea placeholder="Query"></textarea></td>
+              <td></td><td></td><td></td><td><textarea placeholder="query"></textarea></td>
             </tr>
             <tr>
-              <td><button id="directoryBtn">Directory</button></td>
+              <td><button class="dir-btn">Directory</button></td>
               <td></td>
-              <td><textarea placeholder="project or filter"></textarea></td>
+              <td><textarea placeholder="filter"></textarea></td>
               <td><textarea placeholder=""></textarea></td>
             </tr>
           </table>
@@ -167,14 +173,28 @@ class Tabulate {
     const addRowBtn = q("#addRow");
     const addColumnBtn = q("#addColumn");
     const resetBtn = q("#resetTable");
-    const directoryBtn = q("#directoryBtn");
     const backBtn = q("#backToManifest");
     const table = q("#tabulate");
+    if (table) {
+      table.addEventListener("click", (e) => {
+        const btn = e.target.closest(".dir-btn, .scope-btn");
+        if (!btn) return;
+
+        const cell = btn.closest("td");
+        const row = cell?.parentElement?.rowIndex ?? 2;
+        // Prefer the real cell index if clicking from a data cell; otherwise fall back to last usable column
+        const latestCol =
+          table?.rows?.[0]?.cells?.length ? (table.rows[0].cells.length - 1) : 3;
+        const col = (typeof cell?.cellIndex === "number" ? cell.cellIndex : latestCol);
+
+        this.openDirectoryOverlay(row, col);
+      });
+    }
+
 
     if (addRowBtn) addRowBtn.addEventListener("click", () => this.addRow());
     if (addColumnBtn) addColumnBtn.addEventListener("click", () => this.addColumn());
     if (resetBtn) resetBtn.addEventListener("click", () => location.reload());
-    if (directoryBtn) directoryBtn.addEventListener("click", () => this.toggleDirectoryPanel());
     if (backBtn) backBtn.addEventListener("click", () => this.showManifest());
 
     // Auto-update queries when headers or labels change
@@ -253,20 +273,27 @@ if (okBtn) {
       if (c === 0) {
         const dirBtn = document.createElement("button");
         dirBtn.textContent = "Directory";
+        dirBtn.classList.add("dir-btn");
         dirBtn.addEventListener("click", () => {
-          console.log(`Directory button pressed (row ${newRow.rowIndex})`);
+          const row = newRow.rowIndex;
+          const col = newCell.cellIndex;
+          this.openDirectoryOverlay(row, col);
         });
         newCell.appendChild(dirBtn);
-      } else if (c === 1) {
-        newCell.innerHTML = `
-          <button class="delete-btn" onclick="(function(btn){ const tr=btn.closest('tr'); if(!tr) return; tr.remove(); }) (this)">
-            <img src="assets/img/delete-row2.svg" title="Delete Row" height="24px">
-          </button>`;
-      } else {
+      } 
+      if (c === 1) {
+          newCell.innerHTML = `
+            <button class="delete-btn" onclick="(function(btn){ const tr=btn.closest('tr'); if(!tr) return; tr.remove(); }) (this)">
+              <img src="assets/img/delete-row2.svg" title="Delete Row" height="24px">
+            </button>`;
+      } 
+      if (c === 2) {
+        newCell.innerHTML = `<textarea placeholder="filter"></textarea>`;
+      } else if (c >= 3) {
         newCell.innerHTML = `<textarea></textarea>`;
       }
     }
-
+      
     this.classifyCells();
     this.generateQueries();
   }
@@ -276,23 +303,36 @@ if (okBtn) {
     if (!table) return;
     const rows = table.rows;
 
+    // Insert a new cell into every existing row
     for (let r = 0; r < rows.length; r++) {
       const newCell = rows[r].insertCell();
+
       if (r === 0) {
+        // Column delete button
         newCell.innerHTML = `
           <button class="delete-btn" onclick="deleteColumn(this)">
             <img src="assets/img/delete-column.svg" title="Delete Column" height="20">
           </button>`;
-      } else {
-        newCell.innerHTML = `<textarea placeholder=""></textarea>`;
+      } 
+      if (r === 1) {
+        newCell.innerHTML = `<textarea placeholder="query"></textarea>`;
+      } else if (r >= 2) {
+        // Every other row just gets a textarea — no Directory buttons here
+        newCell.innerHTML = `<textarea></textarea>`;
       }
     }
+
+    // Track new column for internal logic
+    const colIndex = rows[0].cells.length - 1;
+    this.directoryInstances[colIndex] = null;
+    // 🧭 no per-column file mapping needed anymore
 
     this.classifyCells();
     this.generateQueries();
     this.updateColumnDeleteVisibility();
-
   }
+
+
 
   deleteColumn(buttonEl) {
     const table = this.container.querySelector("#tabulate");
@@ -484,17 +524,24 @@ Context: {context}
         },
       };
 
-      const payloads = queries.map(({ row, col, query }) => ({
-        ...baseConfig,
-        tabulates: [
-          {
-            tabulate_id: crypto.randomUUID(),
-            row,
-            column: col,
-            rag_query: query,
-          },
-        ],
-      }));
+      const payloads = queries.map(({ row, col, query }) => {
+        // 🗂️ Get any files selected for this row
+      const selectedFiles = this.selectedFilesByRow[row] || [];
+
+        return {
+          ...baseConfig,
+          tabulates: [
+            {
+              tabulate_id: crypto.randomUUID(),
+              row,
+              column: col,
+              rag_query: query,
+              selected_files: selectedFiles, // ✅ new line
+            },
+          ],
+        };
+      });
+
 
       console.log(`📦 Preparing ${payloads.length} payload(s) to upload to ${window.tabulate_url}`);
       console.groupCollapsed("📦 Payload Preview (first 1–2)");
@@ -537,6 +584,7 @@ Context: {context}
           textareas.forEach((ta) => {
             ta.value = "";
           });
+          this.selectedFilesByRow = {};
         }
         console.log("🧹 Cleared all table values after submit.");
 
@@ -858,6 +906,190 @@ Context: {context}
       this.directoryInstance.initialize();
     }
   }
+
+
+// ---------------------------
+// Directory overlay (safe single-instance mode)
+// ---------------------------
+closeDirectoryOverlay() {
+  if (this._removeOverlayListeners) this._removeOverlayListeners();
+
+  const dirPanel = document.getElementById("directoryPanel");
+  const dirContainer = document.getElementById("directory-container");
+  if (!dirPanel || !dirContainer) return;
+
+  dirPanel.classList.add("hidden");
+  dirPanel.classList.remove("expanded");
+  document.body.style.overflow = "";
+
+  // Clear container
+  dirContainer.innerHTML = "";
+
+  // Fully clear instance reference
+  if (this.activeDirectoryInstance) {
+    try {
+      if (typeof this.activeDirectoryInstance.destroy === "function") {
+        this.activeDirectoryInstance.destroy();
+      }
+    } catch (e) {
+      console.warn("⚠️ Error destroying instance on close:", e);
+    }
+    this.activeDirectoryInstance = null;
+  }
+
+  console.log("🧹 Directory overlay closed and instance cleared");
+}
+
+
+openDirectoryOverlay(rowIndex, colIndex) {
+  const dirPanel = document.getElementById("directoryPanel");
+  const dirContainer = document.getElementById("directory-container");
+  if (!dirPanel || !dirContainer) return;
+
+  // Activate overlay
+  dirPanel.classList.remove("hidden");
+  dirPanel.classList.add("expanded");
+  document.body.style.overflow = "hidden";
+
+  // --- Ensure only one instance at a time ---
+  if (this.activeDirectoryInstance) {
+    try { this.activeDirectoryInstance.destroy?.(); } catch {}
+    this.activeDirectoryInstance = null;
+  }
+
+  // --- Clear previous DirectoryService region but keep header wrapper ---
+  dirContainer.innerHTML = "";
+
+// --- 1️⃣ Tabulate (blue) header ---
+// 🧩 Create banner *before* clearing DirectoryService content
+let tabHeader = dirContainer.querySelector(".tabulate-overlay-header");
+if (!tabHeader) {
+  tabHeader = document.createElement("div");
+  tabHeader.className = "tabulate-overlay-header";
+
+  dirContainer.appendChild(tabHeader);
+}
+
+tabHeader.innerHTML = `
+  <div class = "dir-navbar">
+    📁 Row ${rowIndex} - Set Query Scope
+  </div>
+  <button id="closeDirOverlay"
+    style="background:none;border:none;color:white;font-size:1.5rem;cursor:pointer;">×</button>
+`;
+
+/* original
+  tabHeader.style.cssText =
+    "display:flex;align-items:center;justify-content:space-between;padding:0.5rem 1rem;background:#0078d4;color:white;z-index:2;position:relative;";
+
+tabHeader.innerHTML = `
+  <div style="display:flex;align-items:center;gap:0.5rem;">
+    <h2 style="margin:0;font-size:1.1rem;">📁 Column ${colIndex}</h2>
+    <span style="font-size:0.9rem;opacity:0.85;">(Row ${rowIndex})</span>
+  </div>
+  <button id="closeDirOverlay"
+    style="background:none;border:none;color:white;font-size:1.5rem;cursor:pointer;">×</button>
+`;
+*/
+
+tabHeader.querySelector("#closeDirOverlay")
+  .addEventListener("click", () => this.closeDirectoryOverlay());
+
+// --- Keep existing header and append new content safely ---
+dirContainer.innerHTML = "";               // clear once only
+dirContainer.appendChild(tabHeader);       // keep header visible
+tabHeader.querySelector("#closeDirOverlay")
+  .addEventListener("click", () => this.closeDirectoryOverlay());
+
+
+
+  // --- 2️⃣ Content wrapper for DirectoryService ---
+  const contentWrapper = document.createElement("div");
+  contentWrapper.className = "tabulate-overlay-container";
+contentWrapper.className = "tabulate-overlay-container";
+dirContainer.appendChild(contentWrapper);
+
+
+
+// --- 3️⃣ Initialize DirectoryService *inside* wrapper ---
+console.log(`📂 Opening Directory overlay for row ${rowIndex}, col ${colIndex}`);
+this.container = document.querySelector(".tabulate-container"); // 🔧 fix: ensure container reference
+const instance = new DirectoryService({
+  container: contentWrapper,
+  autoFetch: true,
+  mode: "tabulate",
+  onSelectionComplete: (files) => {
+    console.log(`✅ Files selected for row ${rowIndex}:`, files);
+    this.selectedFilesByRow[rowIndex] = files;
+    this.closeDirectoryOverlay();
+  },
+});
+
+
+  console.warn("🧭 about to init DS for row", rowIndex, "col", colIndex);
+
+  instance.initialize();
+  console.warn("🧭 DS init returned, setting active instance");
+
+  this.activeDirectoryInstance = instance;
+  // 🟦 Ensure blue header appears after DirectoryService render
+setTimeout(() => {
+  // avoid duplicates
+  if (!dirContainer.querySelector(".tabulate-overlay-header")) {
+    const header = document.createElement("div");
+    header.className = "tabulate-overlay-header";
+    header.style.cssText = `
+      position:absolute;
+      top:0; left:0; right:0;
+      height:40px;
+      background:#0078d4;
+      color:white;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 1rem;
+      z-index:9999;
+    `;
+    header.innerHTML = `
+      <div>📁 Column ${colIndex} (Row ${rowIndex})</div>
+      <button id="closeDirOverlay"
+        style="background:none;border:none;color:white;font-size:1.5rem;cursor:pointer;">×</button>
+    `;
+    dirContainer.appendChild(header);
+    header.querySelector("#closeDirOverlay")
+      .addEventListener("click", () => this.closeDirectoryOverlay());
+    console.log("🟦 Added blue banner after DirectoryService render");
+  }
+}, 300);
+
+
+// --- Close overlay on Escape or background click ---
+const escHandler = (e) => {
+  if (e.key === "Escape") this.closeDirectoryOverlay();
+};
+document.addEventListener("keydown", escHandler);
+
+const clickHandler = (e) => {
+  // close if click happens outside header or inner content
+  if (e.target.id === "directoryPanel" || e.target.id === "tabulate-overlay-container") {
+    this.closeDirectoryOverlay();
+  }
+};
+
+// reuse existing dirPanel (already declared at top)
+if (dirPanel) dirPanel.addEventListener("click", clickHandler);
+
+// cleanup when closing
+this._removeOverlayListeners = () => {
+  document.removeEventListener("keydown", escHandler);
+  if (dirPanel) dirPanel.removeEventListener("click", clickHandler);
+  this._removeOverlayListeners = null;
+};
+
+
+}
+
+
   updateColumnDeleteVisibility() {
     const table = this.container.querySelector("#tabulate");
     if (!table) return;
@@ -871,6 +1103,10 @@ Context: {context}
       if (btn) btn.style.display = colCount <= 4 ? "none" : "inline-block";
     });
   }
+destroy() {
+  // Safe visual cleanup only
+  if (this.container) this.container.replaceChildren();
+}
 
 }
 

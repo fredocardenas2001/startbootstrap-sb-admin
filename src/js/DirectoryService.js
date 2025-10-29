@@ -8,14 +8,16 @@ full -- show the full editable directory
 readonly -- show the directory with all checkboxes disabled. 
 reOpenChecked -- open the directory tree far enough to show all checked files in read only mode
 excelonly -- show only excel files folder expanded
+tabulate -- tabulate mode. highly customized
 
 */
 
 export default class DirectoryService {
-  constructor({ mode = "full", container, autoFetch = true }) {
+  constructor({ mode = "readonly", container, autoFetch = true, onSelectionComplete = null }) {
     this.mode = mode || "readonly";
-	this.container = container;
+    this.container = container;
     this.autoFetch = autoFetch;
+    this.onSelectionComplete = onSelectionComplete;
     this.data = [];
   }
 
@@ -42,6 +44,7 @@ async initialize() {
   this.setupExpandCollapse();
   this.setupSetChatContext();
   this.setupToggleCheckAll();
+  this.setupSelectFilesForRow();
 }
 
 
@@ -487,12 +490,14 @@ this.container.innerHTML = `
   <div class="directory-wrapper">
 	<div class="dir-box">
 	  <div class="sticky-header">
-	   <div class="chatContextBtns">
-		${["full", "native"].includes(this.mode) ? `
-		  <button id="setChatContext" class="chat-context-btn">Set Chat Context</button>
-		  <button id="clearChatContext" class ="chat-context-btn">Clear Chat Context</button>
-		` : ""}
-		 </div>
+    <div class="chatContextBtns">
+      ${["full", "native"].includes(this.mode) ? `
+        <button id="setChatContext" class="chat-context-btn">Set Chat Context</button>
+        <button id="clearChatContext" class="chat-context-btn">Clear Chat Context</button>
+      ` : this.mode === "tabulate" ? `
+        <button id="selectFilesForRow" class="chat-context-btn">Set Row Scope</button>
+      ` : ""}
+    </div>
 		<div class="tree-controls">
 		  <button id="toggleCheckAll" title="Select All">☐</button>
 		  <span class="divider">|</span>
@@ -505,8 +510,10 @@ this.container.innerHTML = `
 			  <span class="divider">|</span>
 		` : ""}
 		  <button id="toolbarSearchBtn" title="Search File List">🔍</button>
+		${!["tabulate"].includes(this.mode) ? `
 		  <span class="divider">|</span>
 		  <button class="chat-context" id="openIconsModal" title="Help">?</button>
+    ` : ""}
 		</div>
 
 		<div id="searchContainer">
@@ -664,27 +671,62 @@ async loadConfig() {
     const checkboxes = this.container.querySelectorAll(".directory-tree input[type=checkbox]");
     const selectedItems = [];
 
-checkboxes.forEach(checkbox => {
-  if (checkbox.checked) {
-    const fileNameElement = checkbox.closest("div")?.querySelector(".file-name");
-    if (fileNameElement) {
-      selectedItems.push({
-        name: fileNameElement.textContent,
-        r2r_id: checkbox.getAttribute("data-r2r-id") || null
-      });
+  checkboxes.forEach(checkbox => {
+    if (checkbox.checked) {
+      const fileNameElement = checkbox.closest("div")?.querySelector(".file-name");
+      if (fileNameElement) {
+        selectedItems.push({
+          name: fileNameElement.textContent,
+          r2r_id: checkbox.getAttribute("data-r2r-id") || null
+        });
+      }
     }
+  });
+
+      const chatContext = {
+        timestamp: new Date().toISOString(),
+        selected_items: selectedItems,
+      };
+
+      localStorage.setItem("chatContext", JSON.stringify(chatContext));
+      const modal = this.container.querySelector("#chatSavedModal");
+      if (modal) modal.style.display = "flex";  });
   }
-});
 
-    const chatContext = {
-      timestamp: new Date().toISOString(),
-      selected_items: selectedItems,
-    };
+  setupSelectFilesForRow() {
+    if (this.mode !== "tabulate") return;
 
-    localStorage.setItem("chatContext", JSON.stringify(chatContext));
-    const modal = this.container.querySelector("#chatSavedModal");
-    if (modal) modal.style.display = "flex";  });
-}
+    const button = this.container.querySelector("#selectFilesForRow");
+    if (!button) return;
+
+    button.addEventListener("click", () => {
+      const checkboxes = this.container.querySelectorAll(".directory-tree input[type='checkbox']");
+      const selectedFiles = [];
+
+      checkboxes.forEach(cb => {
+        if (cb.checked) {
+          const r2r_id = cb.getAttribute("data-r2r-id");
+          if (!r2r_id) return;
+          const meta = window.r2rIndex?.[r2r_id.toLowerCase()] || {};
+          selectedFiles.push({
+            r2r_id,
+            onedrive_name: meta.name || "Unknown",
+            web_url: meta.web_url || "",
+            relative_path: meta.relative_path || "",
+          });
+        }
+      });
+
+      console.log("📁 [DirectoryService] Selected files for row:", selectedFiles.length);
+
+      if (typeof this.onSelectionComplete === "function") {
+        this.onSelectionComplete(selectedFiles);
+      } else {
+        console.warn("⚠️ No onSelectionComplete callback defined.");
+      }
+    });
+  }
+
 
 setupExpandCollapse() {
   const expandAllBtn = this.container.querySelector("#expandAll");

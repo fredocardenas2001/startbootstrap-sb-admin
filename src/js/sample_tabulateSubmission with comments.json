@@ -1,0 +1,109 @@
+{
+  "item_type": "tabulate",
+  "query_id": "23434ea9-846c-482d-a8f0-1c8b92a1f3ef",
+  "query_submitted": 1761605586,
+  "moniker": "bigsandbox.dev2", <<= customer ID used for placing the file after using it. 
+  "schema_version": "1.1",  
+
+##Tree reassembly logic, this can be ignored
+  "table_meta": {  
+    "num_rows": 1,
+    "num_cols": 2,
+    "header_row": [
+      "",
+      "what is the cure period"
+    ],
+    "row_labels": [
+      ""
+    ],
+    "coordinates": [
+      {
+        "row": 2,
+        "col": 3,
+        "query": "what is the cure period in the hanford project lease agreement"
+      }
+    ]
+  },
+
+#base settings given to me by chatgpt, happy to redo
+  "query_configs": {
+    "search_mode": "advanced",
+    "rag_generation_config": {
+      "model": "azure/gpt-4.1-mini",
+      "temperature": 0,
+      "max_tokens_to_sample": 512
+    },
+    
+# search settings is in the format where it cna just be printed as-is into the rag_query with no changes. 
+# I have two examples here, one with file_ids and one without. 
+    "search_settings": {
+      "use_hybrid_search": true,
+      "use_semantic_search": true,
+      "use_fulltext_search": true,
+      "include_metadatas": true
+      "filters": {
+        "document_id": {
+          "$in": [
+            "e801cc9c-080a-5573-ae39-94ffc5b73318",
+            "e156356d-575a-51dc-a066-bf32b46d5381",
+            "7addee09-adc2-5678-9f95-7458ed1beab6",
+            "90c8358c-795b-59f8-adb7-0ffc420adcae",
+            "d2151d2a-f9b3-5d67-a2a0-7ff161928bf2",
+            "9b493b2c-a042-5052-a3b0-d59e31d4afa8"
+          ]
+        }
+      }
+    },
+  },
+
+# search settings today.
+    "search_settings": {
+      "use_hybrid_search": true,
+      "use_semantic_search": true,
+      "use_fulltext_search": true,
+      "include_metadatas": true
+    },
+
+    "include_title_if_available": true,
+    
+    ###############################################################################################
+    ###############################################################################################
+    ###
+    ### this prompt contains a variable called "context" when this runs the first time in process_tabualte 
+    ### the results are saved back into this file and added as chunk results. 
+    ###
+    ### the top5 chunk results are fed back into the {context} in this format 
+    ###
+    ###    from the process_tabulate.py 
+    ###    # 5b) Build formatted context via chunker (for the model)
+    ###     try:
+    ###         formatted_context = chunk_searcher(
+    ###             query=rag_query,
+    ###             top_k_chunks=top_k,
+    ###             sciphi_api_key=sciphi_key, <<query url for chunks
+    ###             sciphi_search_url=sciphi_search << rag_query url
+    ###         )  # returns formatted string blocks:contentReference[oaicite:5]{index=5}
+    ###         log(f"🧱 [context] Built formatted context ({len(formatted_context.splitlines())} lines)")
+    ###     except Exception as e:
+    ###         log(f"❌ [context] Failed to build context: {e}")
+    ###         continue
+    ###
+    ###     # 5c) Assemble query payload (include your query_configs)
+    ###     payload = dict(query_configs)
+    ###     payload["query"] = rag_query
+    ###     payload["context"] = formatted_context
+    ###
+    ###############################################################################################
+    ###############################################################################################
+    
+    "task_prompt": "## Task:\nAnswer the given question using only the provided context chunks.\n\n## Output Requirements:\n1. Provide a concise answer in 1\u20132 sentences.\n2. At the end of your answer, include a \"Citations\" section listing all documents you used.\n3. Do NOT invent sources or cite anything not present in the context.\n4. For each citation, include:\n   - The document title (from metadata.onedrive_name)\n   - The document ID (from id)\n   - The web URL (from metadata.web_url)\n\n## Inputs:\nContext: {context}\n\n## Answer:\n"
+  },
+  "tabulates": [
+    {
+      "tabulate_id": "6632f977-68ba-4e07-b91f-6096bcf59a2d",
+      "row": 2,
+      "column": 3,
+      "rag_query": "what is the cure period in the hanford project lease agreement"
+    }
+  ]
+}

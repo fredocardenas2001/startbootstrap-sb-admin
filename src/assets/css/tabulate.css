@@ -1,15 +1,18 @@
 .tabulate-container {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
+  overflow-x: auto !important;
+  overflow-y: auto !important;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
 	width: auto;
 	margin:13px 5px;
 	padding:3px 0px 0px 7px;
+  max-height: 80vh;
 }
 
 .tabulate-container table {
   border-collapse: collapse;
-  table-layout: fixed;
-  width: auto;
+  table-layout: auto;
+  width: max-content;
   margin: 0px;
 }
 
@@ -69,12 +72,6 @@
   padding: 7px;
 }
 
-.tabulate-container .controls {
-  margin: 10px 0px 0px 0px;
-  display: flex;
-  justify-content: space-around;
-  width: 500px;
-}
 
 .tabulate-container button {
     text-decoration: none;
@@ -300,13 +297,7 @@
   display: none;
 }
 
-#directoryPanel.expanded {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: var(--bs-body-bg, #fff);
-  overflow: auto;
-}
+
 
 /* When open, display as flex so centering works */
 #submissionModal.show {
@@ -332,19 +323,20 @@
   max-width: 400px;
   width: 80%;
 }
-/* ---- Tabulate Controls Layer ---- */
-.controls {
+
+.tabulate-container .controls {
+  margin: 10px 0px 0px 0px;
   display: flex;
+  justify-content: space-around;
+  width: 500px;
   gap: 8px;
-  justify-content: center;
   align-items: center;
   background: #f8f9fb;                 /* soft neutral background */
   padding: 8px 12px;
   border-radius: 10px;
   box-shadow: 0 3px 6px rgba(0,0,0,0.15); /* subtle 3D lift */
-  margin: 10px 0 20px 0;
   position: relative;
-  z-index: 10;                          /* ensure it sits above table */
+  z-index: 10;      
 }
 
 /* Optional: give the container a floating "layer" look */
@@ -377,4 +369,82 @@
 .controls img {
   display: block;
   pointer-events: none;
+}
+.directory-header {
+  background: #0078d4;
+  color: white;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+}
+
+.directory-header {
+  flex-shrink: 0;
+}
+.directory-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+#directoryPanel.expanded {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--bs-body-bg, #fff);
+  overflow: auto;
+}
+#directoryPanel.expanded {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  z-index: 9999;
+}
+#directory-container {
+  display: flex;
+  flex-direction: column;
+  height: 90%;
+  background: #fff;
+  border-radius: 8px;
+  overflow: auto;
+}
+#directory-container {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  height: 90%;
+  background: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  overflow: auto;
+}
+
+#directoryPanel.hidden {
+  display: none;
+}
+#tabulate-overlay-container {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  height: 90%;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  overflow: auto;
+  position: relative;
+  z-index: 9999;
+}
+
+.tabulate-overlay-header {
+  position: sticky;
+  top: 0;
+  z-index: 10000;
+  background: #0078d4;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
 }

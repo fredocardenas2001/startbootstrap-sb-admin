@@ -1,0 +1,49 @@
+{
+  "item_type": "tabulate",
+  "query_id": "23434ea9-846c-482d-a8f0-1c8b92a1f3ef",
+  "query_submitted": 1761605586,
+  "moniker": "bigsandbox.dev2",
+  "schema_version": "1.1",  
+  "table_meta": {
+    "num_rows": 1,
+    "num_cols": 2,
+    "header_row": [
+      "",
+      "what is the cure period"
+    ],
+    "row_labels": [
+      ""
+    ],
+    "coordinates": [
+      {
+        "row": 2,
+        "col": 3,
+        "query": "what is the cure period in the hanford project lease agreement"
+      }
+    ]
+  },
+  "query_configs": {
+    "search_mode": "advanced",
+    "rag_generation_config": {
+      "model": "azure/gpt-4.1-mini",
+      "temperature": 0,
+      "max_tokens_to_sample": 512
+    },
+    "search_settings": {
+      "use_hybrid_search": true,
+      "use_semantic_search": true,
+      "use_fulltext_search": true,
+      "include_metadatas": true
+    },
+    "include_title_if_available": true,
+    "task_prompt": "## Task:\nAnswer the given question using only the provided context chunks.\n\n## Output Requirements:\n1. Provide a concise answer in 1\u20132 sentences.\n2. At the end of your answer, include a \"Citations\" section listing all documents you used.\n3. Do NOT invent sources or cite anything not present in the context.\n4. For each citation, include:\n   - The document title (from metadata.onedrive_name)\n   - The document ID (from id)\n   - The web URL (from metadata.web_url)\n\n## Inputs:\nContext: {context}\n\n## Answer:\n"
+  },
+  "tabulates": [
+    {
+      "tabulate_id": "6632f977-68ba-4e07-b91f-6096bcf59a2d",
+      "row": 2,
+      "column": 3,
+      "rag_query": "what is the cure period in the hanford project lease agreement"
+    }
+  ]
+}
