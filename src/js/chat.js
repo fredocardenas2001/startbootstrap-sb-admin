@@ -1753,6 +1753,85 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+  const micBtn = document.getElementById("micButton");
+  const chatInput = document.getElementById("messageInput");
+  if (!micBtn || !chatInput) return;
+
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  // If not supported, disable cleanly
+  if (!SpeechRecognition) {
+    micBtn.disabled = true;
+    micBtn.title = "Voice input not supported in this browser.";
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+  recognition.lang = "en-US";
+  recognition.interimResults = true;
+  recognition.continuous = false;
+
+  let isListening = false;
+
+  // Ensure no inline onclick also fires
+  micBtn.onclick = null;
+
+  micBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!isListening) {
+      try {
+        recognition.start();
+        isListening = true;
+        micBtn.classList.add("listening");
+        micBtn.title = "Listening… click to stop";
+      } catch (err) {
+        console.warn("Mic start failed:", err);
+      }
+    } else {
+      recognition.stop();
+    }
+  });
+
+  recognition.onresult = (event) => {
+    let transcript = "";
+    for (const res of event.results) {
+      transcript += res[0].transcript;
+    }
+
+    // Populate your existing textarea
+    chatInput.value = transcript;
+  };
+
+  recognition.onend = () => {
+    isListening = false;
+    micBtn.classList.remove("listening");
+    micBtn.title = "Voice input";
+  };
+
+  recognition.onerror = (event) => {
+    console.error("Speech recognition error:", event.error, event);
+
+    isListening = false;
+    micBtn.classList.remove("listening");
+
+    if (event.error === "network") {
+      micBtn.title = "Voice input unavailable (speech service/network error).";
+    } else if (event.error === "not-allowed") {
+      micBtn.title = "Microphone permission denied. Check browser site settings.";
+    } else if (event.error === "no-speech") {
+      micBtn.title = "No speech detected. Try again.";
+    } else {
+      micBtn.title = "Voice input error. Try again or type instead.";
+    }
+  };
+
+});
+
+
 document.addEventListener('DOMContentLoaded', () => {
   const btnDocx = document.getElementById('exportWord');
   const btnPdf  = document.getElementById('exportPDF');

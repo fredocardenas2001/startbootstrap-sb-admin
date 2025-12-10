@@ -180,7 +180,6 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  padding: 8px 15px;
   background-color: #0078d4;
   color: white;
   border-radius: 15px;
@@ -188,11 +187,6 @@
   font-size: 14px;
   width: 125px;
   border: 0px;
-}
-
-#chat-entry .message-input-container button {
-	width: 65px;
-	height:53px;
 }
 
 #chat-entry .message-input-container {
@@ -211,12 +205,14 @@
 }
 
 #chat-entry .message-input-container button {
-	padding: 8px 15px;
 	background-color: #0078d4;
 	color: white;
 	border: none;
 	border-radius: 5px;
 	cursor: pointer;
+  width: 65px;
+	height:53px;
+  font-size: calc(53px * 0.7);
 }
 
 #chat-entry #validate {
@@ -957,11 +953,9 @@
 }
 
 #chat-entry #webSearchToggle {
-  font-size: 40px;     /* <-- controls the 🌐 size */
   line-height: 1;      
   padding: 6px 8px;    
   border: 0px solid #ccc;
-  background: #0078d4;
   border-radius: 8px;
   cursor: pointer;
   color:black;
@@ -971,6 +965,39 @@
   border-color: #2b6cb0 ;
   background: #ff751a;
   color: #333;
+  box-shadow: 0 0 8px rgba(229, 57, 53, 0.8);
+
+}
+
+#chat-entry #micButton {
+  line-height: 1;      
+  border: 0px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  color: black;
+}
+
+#chat-entry #micButton.listening {
+  background: #ff751a;  /* orange */
+  color: #333;
+  box-shadow: 0 0 8px rgba(229, 57, 53, 0.8);
+}
+
+#chat-entry #sendButton {
+  color: black;
+}
+
+#chat-entry button:hover {
+  background: #ff751a;  /* orange */
+  color: #333;
+  box-shadow: 0 0 8px rgba(229, 57, 53, 0.8);
+}  
+
+#chat-entry #sendButton:active {
+  background: #ff751a;   /* orange flash */
+  color: #333;
+  box-shadow: 0 0 8px rgba(255, 117, 26, 0.9);
+  transform: scale(0.96);  /* subtle press-in effect */
 }
 
 #chat-entry .cs-accordion { width: 100%; }

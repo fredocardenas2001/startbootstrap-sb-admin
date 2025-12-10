@@ -34,8 +34,8 @@ block content
                 <div class="message-input-container">
                     <textarea id="messageInput" placeholder="Open a previous session or just ask a question" onkeydown="handleEnter(event)"></textarea>
                     <button id="webSearchToggle" type="button" aria-pressed="false" title="Web search: off">🖀</button>
-                    <!-- 🌐   🖀      -->
-                    <button onclick="sendMessage()">Send</button>
+                    <button id="micButton" type="button" title="Voice input">🎙️</button>
+                    <button id="sendButton" title="Send Message" onclick="sendMessage()">🖅</button>
                 </div>
             </div>
             <div id="showContextLinkContainer"></div>
