@@ -3,24 +3,12 @@ extends ../layouts/dashboard.pug
 block config
   - var bodyClass = 'sb-nav-fixed'
   - var pageTitle = 'Checklist'
+  - var index = true
   - var sidenavStyle = 'sb-sidenav-dark'
 
 block content
-  #checklist-container
-    #checklistMountPoint
+  #master-container
+    include checklist-demo-body.pug
 
 append scripts
-  // React + ReactDOM
-  script(src="https://unpkg.com/react@18/umd/react.development.js")
-  script(src="https://unpkg.com/react-dom@18/umd/react-dom.development.js")
-  script(src="https://unpkg.com/babel-standalone@6/babel.min.js")
-
-  
-  // Babel for JSX
-  script(src="https://unpkg.com/@babel/standalone/babel.min.js")
-
-  // Your JSX entrypoint (use type="text/babel" so Babel transpiles it)
-  script(type="text/babel", src="js/checklist.jsx")
-
-prepend css
-  link(rel="stylesheet", href="assets/css/checklist.css")
+  script(src="js/checklist-demo.js")
