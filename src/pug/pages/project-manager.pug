@@ -1,0 +1,243 @@
+extends ../layouts/dashboard.pug
+
+block config
+    - var bodyClass = 'sb-nav-fixed'
+    - var pageTitle = 'Project Manager';
+    - var index = true;
+    - var sidenavStyle = 'sb-sidenav-dark'
+
+append scripts
+    script(type="module", src="js/project-manager.js")
+	
+prepend css
+    link(rel="stylesheet", href="assets/css/project-manager.css")
+
+block content
+  .page
+    h2 Project Manager
+
+  table.project-table
+    thead
+      tr
+        th Project
+        th Manager
+        th Task
+        th % Complete
+        th Began
+        th Assumed Completion
+        th Projected Completion
+    tbody
+      tr
+        td
+          a.project-link(href="#", data-project="Rancho Santa Ana") Rancho Santa Ana
+        td David P
+        td Financial Closing
+        td
+          .progress-cell
+            .progress-track
+              .progress-fill(style="width:60%")
+            span.progress-text 60%
+        td 1/3/2024
+        td 4/6/2026
+        td.projected-late 7/6/2026
+
+      tr
+        td
+          a.project-link(href="#", data-project="West Estates") West Estates
+        td James F
+        td Late Development
+        td
+          .progress-cell
+            .progress-track
+              .progress-fill(style="width:45%")
+            span.progress-text 45%
+        td 8/3/2023
+        td 2/3/2026
+        td.projected-ok 1/6/2026
+
+      tr
+        td
+          a.project-link(href="#", data-project="Pleasantville Farms") Pleasantville Farms
+        td Dana Q
+        td Operation
+        td
+          .progress-cell
+            .progress-track
+              .progress-fill(style="width:100%")
+            span.progress-text 100%
+        td 7/2/2023
+        td NA
+        td NA
+
+      tr
+        td
+          a.project-link(href="#", data-project="West Parkerville") West Parkerville
+        td David P
+        td NTP
+        td
+          .progress-cell
+            .progress-track
+              .progress-fill(style="width:75%")
+            span.progress-text 75%
+        td 8/3/2025
+        td 10/6/2026
+        td.projected-ok 7/6/2026
+
+      tr.new-project-row
+        td(colspan="7")
+          a#newProjectLink(href="#") + New Project
+
+  //- Modal (hidden by default)
+  #projectModal.project-modal.hidden
+    .modal-backdrop
+    .modal-box
+      .modal-header
+        h3 Create New Task Manager Inclusive of:
+        button#closeProjectModal.modal-close(type="button") ×
+
+      .modal-body
+        //- Placeholder: tree goes here
+      ul.menu-tree
+
+        //- Top-level simple items (aligned)
+        li
+          .tree-row
+            span.tree-toggle.placeholder 🞂
+            input(type="checkbox")
+            span.tree-label Checklist
+
+        li
+          .tree-row
+            span.tree-toggle.placeholder 🞂
+            input(type="checkbox")
+            span.tree-label Model
+
+        //- Externals (tree node)
+        li.tree-node
+          .tree-row
+            span.tree-toggle(type="button") 🞂
+            input.cb-slot(type="checkbox" aria-hidden="true" tabindex="-1")
+            span.tree-label Externals
+
+
+          ul.tree-children
+            //- Entity Good Standing (tree node)
+            li.tree-node
+              .tree-row
+                span.tree-toggle(type="button") 🞂
+                input.cb-slot(type="checkbox" aria-hidden="true" tabindex="-1")
+                span.tree-label Entity Good Standing
+
+              ul.tree-children
+                li
+                  .tree-row
+                    span.tree-toggle.placeholder 🞂
+                    input(type="checkbox")
+                    span.tree-label Peanut Bamba II 2017 LLC
+                li
+                  .tree-row
+                    span.tree-toggle.placeholder 🞂
+                    input(type="checkbox")
+                    span.tree-label Peanut Bamba Portfolio I 2017 LLC
+                li
+                  .tree-row
+                    span.tree-toggle.placeholder 🞂
+                    input(type="checkbox")
+                    span.tree-label Stonetown Mall 2020, LLC
+                li
+                  .tree-row
+                    span.tree-toggle.placeholder 🞂
+                    input(type="checkbox")
+                    span.tree-label MG, Inc.
+
+            //- Remaining externals (simple items)
+            li
+              .tree-row
+                span.tree-toggle.placeholder 🞂
+                input(type="checkbox")
+                span.tree-label Zillow Property Search
+            li
+              .tree-row
+                span.tree-toggle.placeholder 🞂
+                input(type="checkbox")
+                span.tree-label Orrenia Price Curves
+            li
+              .tree-row
+                span.tree-toggle.placeholder 🞂
+                input(type="checkbox")
+                span.tree-label Trellis Lawsuit Search
+            li
+              .tree-row
+                span.tree-toggle.placeholder 🞂
+                input(type="checkbox")
+                span.tree-label Bloomberg Financials Search
+
+        //- Others (tree node)
+        li.tree-node
+          .tree-row
+            span.tree-toggle(type="button") 🞂
+            input.cb-slot(type="checkbox" aria-hidden="true" tabindex="-1")
+            span.tree-label Others
+
+          ul.tree-children
+            li
+              .tree-row
+                span.tree-toggle.placeholder 🞂
+                input(type="checkbox")
+                span.tree-label Term Sheet Issuance
+            li
+              .tree-row
+                span.tree-toggle.placeholder 🞂
+                input(type="checkbox")
+                span.tree-label On - Site Inspection
+            li
+              .tree-row
+                span.tree-toggle.placeholder 🞂
+                input(type="checkbox")
+                span.tree-label Safe Harboring Review
+
+            //- Comparative Analysis (tree node)
+            li.tree-node
+              .tree-row
+                span.tree-toggle(type="button") 🞂
+                input.cb-slot(type="checkbox" aria-hidden="true" tabindex="-1")
+                span.tree-label Comparative Analysis
+
+              ul.tree-children
+                li
+                  .tree-row
+                    span.tree-toggle.placeholder 🞂
+                    input(type="checkbox")
+                    span.tree-label Pricing Curve
+                li
+                  .tree-row
+                    span.tree-toggle.placeholder 🞂
+                    input(type="checkbox")
+                    span.tree-label Valuation
+                li
+                  .tree-row
+                    span.tree-toggle.placeholder 🞂
+                    input(type="checkbox")
+                    span.tree-label Build Costs
+                li
+                  .tree-row
+                    span.tree-toggle.placeholder 🞂
+                    input(type="checkbox")
+                    span.tree-label Operating Costs
+                li
+                  .tree-row
+                    span.tree-toggle.placeholder 🞂
+                    input(type="checkbox")
+                    span.tree-label Create New
+
+        //- Upload New (aligned)
+        li
+          .tree-row
+            span.tree-toggle.placeholder 🞂
+            input(type="checkbox")
+            span.tree-label Upload New
+
+        .modal-footer
+          .modal-actions
+            button.btn-secondary(type="button") Cancel
+            button.btn-primary(type="button") Continue

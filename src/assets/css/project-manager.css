@@ -1,0 +1,359 @@
+.project-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.project-table th,
+.project-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e6e6e6;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.project-table thead th {
+  font-weight: 600;
+  background: #fafafa;
+}
+
+/* ================================
+   Project Links
+   ================================ */
+
+.project-link {
+  color: #1a73e8;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.project-link:hover {
+  text-decoration: none;
+}
+
+/* ================================
+   Progress Bar
+   ================================ */
+
+.progress-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress-track {
+  flex: 1;
+  height: 14px;
+  min-width: 140px;
+  background: #e9eef6;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(to right, #6f97c8, #a9c3e6);
+}
+
+.progress-text {
+  min-width: 40px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ================================
+   Projected Completion Status
+   ================================ */
+
+.projected-ok {
+  background: #9adf7f;
+}
+
+.projected-late {
+  background: #f39a5c;
+}
+
+/* ================================
+   "+ New Project" Row
+   ================================ */
+
+tr.new-project-row td {
+  padding: 14px 12px;
+}
+
+tr.new-project-row a {
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+tr.new-project-row a:hover {
+  text-decoration: underline;
+}
+
+/* ================================
+   Modal Helpers (already used)
+   ================================ */
+
+.hidden {
+  display: none;
+}
+
+/* ================================
+   Modal (Project Manager)
+   ================================ */
+
+/* ================================
+   Project Manager Modal – Polished
+   ================================ */
+
+/* Container */
+.project-modal {
+  display: block;                /* beats global modal rules */
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  font-family: inherit;
+}
+
+.project-modal.hidden {
+  display: none;
+}
+
+/* Backdrop */
+.project-modal .modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  z-index: 0;
+  pointer-events: none;   /* <-- add this */
+}
+
+
+/* Box */
+.project-modal .modal-box {
+  position: relative;
+  z-index: 1;
+  width: min(760px, calc(100% - 32px));
+  margin: 60px auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Header */
+.project-modal .modal-header {
+  padding: 14px 16px;
+  background: #0078d4;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.project-modal .modal-header h3 {
+  margin: 0;
+  font-size: 16px;
+  letter-spacing: 0.2px;
+  color: white;
+}
+
+/* Close button */
+.project-modal .modal-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.project-modal .modal-close:hover {
+  background: rgba(0, 0, 0, 0.07);
+}
+
+.project-modal .modal-close:active {
+  transform: translateY(1px);
+}
+
+/* Body */
+.project-modal .modal-body {
+  padding: 14px 16px;
+  max-height: 62vh;
+  overflow: auto;
+}
+
+/* Footer */
+.project-modal .modal-footer {
+  padding: 12px 16px;
+  background: #fafbfc;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Optional: style the Continue button if it’s a plain <button> */
+.project-modal .modal-footer button {
+  padding: 9px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: #1a73e8;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.project-modal .modal-footer button:hover {
+  filter: brightness(0.98);
+}
+
+.project-modal .modal-footer button:active {
+  transform: translateY(1px);
+}
+
+/* ================================
+   Menu Tree (single, consistent system)
+   ================================ */
+
+.project-modal .menu-tree {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Each node */
+.project-modal .menu-tree .tree-node {
+  margin: 6px 0;
+}
+
+/* Row layout: [toggle][checkbox][label] aligned */
+.project-modal .menu-tree .tree-row {
+  display: grid;
+  grid-template-columns: 16px 22px 1fr;
+  align-items: center;
+  gap: 10px;
+
+  padding: 6px 8px;
+  border-radius: 10px;
+}
+
+/* Subtle hover for the whole row */
+.project-modal .menu-tree .tree-row:hover {
+  background: rgba(26, 115, 232, 0.06);
+}
+
+/* Toggle: subtle (not a button) */
+.project-modal .menu-tree .tree-toggle {
+  width: 16px;
+  height: 16px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 10px;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.38);
+  background: transparent;
+  border: none;
+
+  opacity: 0.6;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+/* Only “lights up” on row hover */
+.project-modal .menu-tree .tree-row:hover .tree-toggle {
+  opacity: 1;
+  color: rgba(26, 115, 232, 0.9);
+}
+
+/* Rotate arrow when open */
+.project-modal .menu-tree .tree-node.is-open > .tree-row .tree-toggle {
+  transform: rotate(90deg);
+}
+
+/* Checkbox */
+.project-modal .menu-tree input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+/* Label */
+.project-modal .menu-tree .tree-label {
+  font-weight: 600;
+}
+
+/* Child container */
+.project-modal .menu-tree .tree-children {
+  margin-left: 28px;
+  padding-left: 12px;
+  border-left: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Collapse behavior */
+.project-modal .menu-tree .tree-node > .tree-children {
+  display: none;
+}
+
+.project-modal .menu-tree .tree-node.is-open > .tree-children {
+  display: block;
+}
+.project-modal .menu-tree .tree-toggle.placeholder {
+  visibility: hidden;
+  cursor: default;
+}
+.project-modal .tree-node:not(:has(> .tree-children)) > .tree-row .tree-toggle {
+  visibility: hidden;
+}
+.project-modal button {
+    background-color: #0078d4;
+    color: white;
+    cursor: pointer;
+    padding: 8px;
+    width: 125px;
+    border: none;
+    text-align: center;
+    outline: none;
+    font-size: 14px;
+    border-radius: 18px;
+}
+.project-modal .modal-footer {
+  padding: 16px 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.project-modal .modal-actions {
+  display: flex;
+  justify-content: flex-end; /* right-aligned */
+  gap: 12px;
+}
+
+/* Optional button styling */
+.project-modal .btn-primary {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.project-modal .btn-secondary {
+  background: transparent;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  padding: 10px 18px;
+  border-radius: 8px;
+}
+.project-modal .menu-tree .cb-slot {
+  visibility: hidden;   /* keeps space in the grid */
+  pointer-events: none; /* not clickable */
+}
