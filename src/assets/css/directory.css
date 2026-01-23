@@ -519,7 +519,7 @@ body {
     cursor: pointer;
     justify-content: flex-start;  /* ✅ Keep contents aligned left */
     text-align: left;
-    width: fit-content;           /* ✅ Shrink to content width */
+    width: 50%;           /* ✅ Shrink to content width */
     max-width: 100%;
 }
 
@@ -551,6 +551,7 @@ body {
     word-wrap: break-word;  /* Ensures long words do not overflow */
 	font-family: serif;
 	line-height:1.5;
+	line-height:1.5;
 	
 }
 
@@ -576,4 +577,19 @@ body {
 	font-size:20px;
 	padding:0px;
 	
+}
+.wizard-instructions {
+  margin-bottom: 12px;
+}
+
+.wizard-instructions h4 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.wizard-instructions p {
+  margin: 0;
+  font-size: 12px;
+  color: #555;
 }

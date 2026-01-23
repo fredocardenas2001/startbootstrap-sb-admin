@@ -2,7 +2,7 @@ extends ../layouts/dashboard.pug
 
 block config
     - var bodyClass = 'sb-nav-fixed'
-    - var pageTitle = 'Project Manager';
+    - var pageTitle = 'Task Manager';
     - var index = true;
     - var sidenavStyle = 'sb-sidenav-dark'
 
@@ -11,10 +11,12 @@ append scripts
 	
 prepend css
     link(rel="stylesheet", href="assets/css/project-manager.css")
+    link(rel="stylesheet", href="assets/css/directory.css")
+
 
 block content
   .page
-    h2 Project Manager
+    h2 Task Manager
 
   table.project-table
     thead
@@ -85,159 +87,186 @@ block content
 
       tr.new-project-row
         td(colspan="7")
-          a#newProjectLink(href="#") + New Project
+          a#newProjectLink(href="#") + New Task List
+
+  // Results area (hidden by default)
+  #resultsPanel.hidden
+    .results-loading.hidden
+      img#resultsGif(src="assets/img/gears.gif" alt="Loading")
+      p Processing project...
+
+    .results-table.hidden
+      h3 Task Manager Results
+      table.result-table
+        thead
+
+        tbody#resultsTbody
+
 
   //- Modal (hidden by default)
   #projectModal.project-modal.hidden
     .modal-backdrop
     .modal-box
       .modal-header
-        h3 Create New Task Manager Inclusive of:
+        h3 Task Manger Creation Wizard
         button#closeProjectModal.modal-close(type="button") ×
 
       .modal-body
-        //- Placeholder: tree goes here
-      ul.menu-tree
-
-        //- Top-level simple items (aligned)
-        li
-          .tree-row
-            span.tree-toggle.placeholder 🞂
-            input(type="checkbox")
-            span.tree-label Checklist
-
-        li
-          .tree-row
-            span.tree-toggle.placeholder 🞂
-            input(type="checkbox")
-            span.tree-label Model
-
-        //- Externals (tree node)
-        li.tree-node
-          .tree-row
-            span.tree-toggle(type="button") 🞂
-            input.cb-slot(type="checkbox" aria-hidden="true" tabindex="-1")
-            span.tree-label Externals
+        // Step 1: Directory selection
+        #wizardStepDirectory
+          .wizard-instructions
+            h4 Step 1: Select a Project
+            p &nbsp;
+            p Choose the folder that represents the project you want to work with and press Continue.
+          #directory-container.pm-directory-step
 
 
-          ul.tree-children
-            //- Entity Good Standing (tree node)
+        // Step 2: Task manager selections
+        #wizardStepTasks.hidden
+          .wizard-instructions
+            h4 Select Task Manager Components
+            p Choose the items you want included for this project and press Finish.
+            p You can expand sections to see additional options.        
+          ul.menu-tree
+
+            //- Top-level simple items (aligned)
+            li
+              .tree-row
+                span.tree-toggle.placeholder 🞂
+                input(type="checkbox")
+                span.tree-label Checklist
+
+            li
+              .tree-row
+                span.tree-toggle.placeholder 🞂
+                input(type="checkbox")
+                span.tree-label Model
+
+            //- Externals (tree node)
             li.tree-node
               .tree-row
                 span.tree-toggle(type="button") 🞂
                 input.cb-slot(type="checkbox" aria-hidden="true" tabindex="-1")
-                span.tree-label Entity Good Standing
+                span.tree-label Externals
+
+              ul.tree-children
+                //- Entity Good Standing (tree node)
+                li.tree-node
+                  .tree-row
+                    span.tree-toggle(type="button") 🞂
+                    input.cb-slot(type="checkbox" aria-hidden="true" tabindex="-1")
+                    span.tree-label Entity Good Standing
+
+                  ul.tree-children
+                    li
+                      .tree-row
+                        span.tree-toggle.placeholder 🞂
+                        input(type="checkbox")
+                        span.tree-label Peanut Bamba II 2017 LLC
+                    li
+                      .tree-row
+                        span.tree-toggle.placeholder 🞂
+                        input(type="checkbox")
+                        span.tree-label Peanut Bamba Portfolio I 2017 LLC
+                    li
+                      .tree-row
+                        span.tree-toggle.placeholder 🞂
+                        input(type="checkbox")
+                        span.tree-label Stonetown Mall 2020, LLC
+                    li
+                      .tree-row
+                        span.tree-toggle.placeholder 🞂
+                        input(type="checkbox")
+                        span.tree-label MG, Inc.
+
+                //- Remaining externals (simple items)
+                li
+                  .tree-row
+                    span.tree-toggle.placeholder 🞂
+                    input(type="checkbox")
+                    span.tree-label Zillow Property Search
+                li
+                  .tree-row
+                    span.tree-toggle.placeholder 🞂
+                    input(type="checkbox")
+                    span.tree-label Orrenia Price Curves
+                li
+                  .tree-row
+                    span.tree-toggle.placeholder 🞂
+                    input(type="checkbox")
+                    span.tree-label Trellis Lawsuit Search
+                li
+                  .tree-row
+                    span.tree-toggle.placeholder 🞂
+                    input(type="checkbox")
+                    span.tree-label Bloomberg Financials Search
+
+            //- Others (tree node)
+            li.tree-node
+              .tree-row
+                span.tree-toggle(type="button") 🞂
+                input.cb-slot(type="checkbox" aria-hidden="true" tabindex="-1")
+                span.tree-label Others
 
               ul.tree-children
                 li
                   .tree-row
                     span.tree-toggle.placeholder 🞂
                     input(type="checkbox")
-                    span.tree-label Peanut Bamba II 2017 LLC
+                    span.tree-label Term Sheet Issuance
                 li
                   .tree-row
                     span.tree-toggle.placeholder 🞂
                     input(type="checkbox")
-                    span.tree-label Peanut Bamba Portfolio I 2017 LLC
+                    span.tree-label On - Site Inspection
                 li
                   .tree-row
                     span.tree-toggle.placeholder 🞂
                     input(type="checkbox")
-                    span.tree-label Stonetown Mall 2020, LLC
-                li
-                  .tree-row
-                    span.tree-toggle.placeholder 🞂
-                    input(type="checkbox")
-                    span.tree-label MG, Inc.
+                    span.tree-label Safe Harboring Review
 
-            //- Remaining externals (simple items)
+                //- Comparative Analysis (tree node)
+                li.tree-node
+                  .tree-row
+                    span.tree-toggle(type="button") 🞂
+                    input.cb-slot(type="checkbox" aria-hidden="true" tabindex="-1")
+                    span.tree-label Comparative Analysis
+
+                  ul.tree-children
+                    li
+                      .tree-row
+                        span.tree-toggle.placeholder 
+                        input(type="checkbox")
+                        span.tree-label Pricing Curve
+                    li
+                      .tree-row
+                        span.tree-toggle.placeholder 🞂
+                        input(type="checkbox")
+                        span.tree-label Valuation
+                    li
+                      .tree-row
+                        span.tree-toggle.placeholder 🞂
+                        input(type="checkbox")
+                        span.tree-label Build Costs
+                    li
+                      .tree-row
+                        span.tree-toggle.placeholder 🞂
+                        input(type="checkbox")
+                        span.tree-label Operating Costs
+                    li
+                      .tree-row
+                        span.tree-toggle.placeholder 🞂
+                        input(type="checkbox")
+                        span.tree-label Create New
+
+            //- Upload New (aligned)
             li
               .tree-row
                 span.tree-toggle.placeholder 🞂
                 input(type="checkbox")
-                span.tree-label Zillow Property Search
-            li
-              .tree-row
-                span.tree-toggle.placeholder 🞂
-                input(type="checkbox")
-                span.tree-label Orrenia Price Curves
-            li
-              .tree-row
-                span.tree-toggle.placeholder 🞂
-                input(type="checkbox")
-                span.tree-label Trellis Lawsuit Search
-            li
-              .tree-row
-                span.tree-toggle.placeholder 🞂
-                input(type="checkbox")
-                span.tree-label Bloomberg Financials Search
+                span.tree-label Upload New
 
-        //- Others (tree node)
-        li.tree-node
-          .tree-row
-            span.tree-toggle(type="button") 🞂
-            input.cb-slot(type="checkbox" aria-hidden="true" tabindex="-1")
-            span.tree-label Others
-
-          ul.tree-children
-            li
-              .tree-row
-                span.tree-toggle.placeholder 🞂
-                input(type="checkbox")
-                span.tree-label Term Sheet Issuance
-            li
-              .tree-row
-                span.tree-toggle.placeholder 🞂
-                input(type="checkbox")
-                span.tree-label On - Site Inspection
-            li
-              .tree-row
-                span.tree-toggle.placeholder 🞂
-                input(type="checkbox")
-                span.tree-label Safe Harboring Review
-
-            //- Comparative Analysis (tree node)
-            li.tree-node
-              .tree-row
-                span.tree-toggle(type="button") 🞂
-                input.cb-slot(type="checkbox" aria-hidden="true" tabindex="-1")
-                span.tree-label Comparative Analysis
-
-              ul.tree-children
-                li
-                  .tree-row
-                    span.tree-toggle.placeholder 🞂
-                    input(type="checkbox")
-                    span.tree-label Pricing Curve
-                li
-                  .tree-row
-                    span.tree-toggle.placeholder 🞂
-                    input(type="checkbox")
-                    span.tree-label Valuation
-                li
-                  .tree-row
-                    span.tree-toggle.placeholder 🞂
-                    input(type="checkbox")
-                    span.tree-label Build Costs
-                li
-                  .tree-row
-                    span.tree-toggle.placeholder 🞂
-                    input(type="checkbox")
-                    span.tree-label Operating Costs
-                li
-                  .tree-row
-                    span.tree-toggle.placeholder 🞂
-                    input(type="checkbox")
-                    span.tree-label Create New
-
-        //- Upload New (aligned)
-        li
-          .tree-row
-            span.tree-toggle.placeholder 🞂
-            input(type="checkbox")
-            span.tree-label Upload New
-
-        .modal-footer
-          .modal-actions
-            button.btn-secondary(type="button") Cancel
-            button.btn-primary(type="button") Continue
+      .modal-footer
+        .modal-actions
+          button#cancelProjectModal.btn-secondary(type="button") Cancel
+          button#continueProjectModal.btn-primary(type="button") Continue

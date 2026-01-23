@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	if (!container) return;
 
 	const dir = new DirectoryService({
-		mode: "native",            // or "full", "readonly", "", "excelonly", "native" etc.
+		mode: "native",            // or "full", "readonly", "", "excelonly", "foldersonly", "native" etc.
 		container: container,
 		autoFetch: true
 	});

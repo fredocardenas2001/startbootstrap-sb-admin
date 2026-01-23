@@ -8,16 +8,53 @@ full -- show the full editable directory
 readonly -- show the directory with all checkboxes disabled. 
 reOpenChecked -- open the directory tree far enough to show all checked files in read only mode
 excelonly -- show only excel files folder expanded
+foldersonly -- show folders only
 
 */
+
+
+const TOOLBAR_CAPS = {
+  full: {
+    refresh: true,
+    selectAll: true,
+    expandCollapse: true,
+    showChecked: true,
+    search: true,
+  },
+  native: {
+    refresh: true,
+    selectAll: true,
+    expandCollapse: true,
+    showChecked: true,
+    search: true,
+  },
+  excelonly: {
+    refresh: false,
+    selectAll: true,
+    expandCollapse: true,
+    showChecked: true,
+    search: true,
+  },
+  foldersonly: {
+    refresh: false,
+    selectAll: false,
+    expandCollapse: true,
+    showChecked: false,
+    search: true,
+  },
+};
+
 
 export default class DirectoryService {
   constructor({ mode = "full", container, autoFetch = true }) {
     this.mode = mode || "readonly";
-	this.container = container;
+    this.container = container;
     this.autoFetch = autoFetch;
     this.data = [];
-  }
+    this.toolbarCaps = TOOLBAR_CAPS[this.mode] || TOOLBAR_CAPS.full;
+}
+
+
 
 async initialize() {
   if (!this.container) throw new Error("DirectoryService: container is missing");
@@ -87,7 +124,13 @@ createTreeNode(item, parent, level = 0) {
 
 const isFolder = Array.isArray(item.children);
 
-if (this.mode === "excelonly") {
+// foldersOnly: skip all file nodes, keep folder nodes
+if (this.mode === "foldersonly" && !isFolder) {
+  return;
+}
+
+
+if (this.toolbarCaps.filterToExcel) {
   if (isFolder) {
     // Skip this folder if *none* of its descendants are Excel files
     const hasExcelDescendant = (children) => {
@@ -492,22 +535,42 @@ this.container.innerHTML = `
 		  <button id="setChatContext" class="chat-context-btn">Set Chat Context</button>
 		  <button id="clearChatContext" class ="chat-context-btn">Clear Chat Context</button>
 		` : ""}
+
 		 </div>
-		<div class="tree-controls">
-		  <button id="toggleCheckAll" title="Select All">☐</button>
-		  <span class="divider">|</span>
-		  <button id="expandAll" title="Expand All">&#x002B;</button>
-		  <button id="collapseAll" title="Collapse All">&#x2212;</button>
-		  <button id="showCheckedBtn" title= "show checked items">✅</button>
-		  <span class="divider">|</span>
-		${["native", "excelonly"].includes(this.mode) ? `
-			  <button id="refreshTree" title="Refresh">↻</button>
-			  <span class="divider">|</span>
-		` : ""}
-		  <button id="toolbarSearchBtn" title="Search File List">🔍</button>
-		  <span class="divider">|</span>
-		  <button class="chat-context" id="openIconsModal" title="Help">?</button>
-		</div>
+
+
+  <div class="tree-controls">
+
+    ${this.toolbarCaps.selectAll ? `
+      <button id="toggleCheckAll" title="Select All">☐</button>
+      <span class="divider">|</span>
+    ` : ""}
+
+    ${this.toolbarCaps.expandCollapse ? `
+      <button id="expandAll" title="Expand All">&#x002B;</button>
+      <button id="collapseAll" title="Collapse All">&#x2212;</button>
+    ` : ""}
+
+    ${this.toolbarCaps.showChecked ? `
+      <button id="showCheckedBtn" title="Show checked items">✅</button>
+      <span class="divider">|</span>
+    ` : ""}
+
+    ${this.toolbarCaps.refresh ? `
+      <button id="refreshTree" title="Refresh">↻</button>
+      <span class="divider">|</span>
+    ` : ""}
+
+    ${this.toolbarCaps.search ? `
+      <button id="toolbarSearchBtn" title="Search File List">🔍</button>
+      <span class="divider">|</span>
+    ` : ""}
+
+    <button class="chat-context" id="openIconsModal" title="Help">?</button>
+
+  </div>
+
+
 
 		<div id="searchContainer">
 		  <div id="searchPanel">
@@ -518,8 +581,11 @@ this.container.innerHTML = `
 
 	  </div>
 	  <ul id="tree" class="directory-tree"></ul>
+
 	  <div class="resize-handle"></div>
 	</div>
+
+
 
 	<div id="chatSavedModal" class="modal">
 	  <div class="modal-content">
@@ -591,9 +657,9 @@ renderTree() {
   // Dispatch render event
   const treeReadyEvent = new CustomEvent("directoryRendered");
   this.container.dispatchEvent(treeReadyEvent);
-if (this.mode === "excelonly") {
-  this.expandAllFolders();
-}
+  if (this.mode === "excelonly") {
+    this.expandAllFolders();
+  }
 
   console.log("📤 directoryRendered dispatched");
 }
