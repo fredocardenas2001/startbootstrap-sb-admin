@@ -755,7 +755,7 @@
 }
 
 #chat-entry .submit-feedback:hover {
-	color:#ff751a;
+	color:#66bdff;
 }
 
 #chat-entry .chat-message {
@@ -838,7 +838,7 @@
 }
 
 #chat-entry button.collapsible.active-chat {
-  background-color: #ff751a;
+  background-color: #66bdff;
   color: white;
 }
 
@@ -963,7 +963,7 @@
 
 #chat-entry #webSearchToggle[aria-pressed="true"] {
   border-color: #2b6cb0 ;
-  background: #ff751a;
+  background: #66bdff;
   color: #333;
   box-shadow: 0 0 8px rgba(229, 57, 53, 0.8);
 
@@ -978,7 +978,7 @@
 }
 
 #chat-entry #micButton.listening {
-  background: #ff751a;  /* orange */
+  background: #66bdff; 
   color: #333;
   box-shadow: 0 0 8px rgba(229, 57, 53, 0.8);
 }
@@ -988,13 +988,13 @@
 }
 
 #chat-entry button:hover {
-  background: #ff751a;  /* orange */
+  background: #66bdff;  
   color: #333;
   box-shadow: 0 0 8px rgba(229, 57, 53, 0.8);
 }  
 
 #chat-entry #sendButton:active {
-  background: #ff751a;   /* orange flash */
+  background: #66bdff
   color: #333;
   box-shadow: 0 0 8px rgba(255, 117, 26, 0.9);
   transform: scale(0.96);  /* subtle press-in effect */
@@ -1095,7 +1095,7 @@
 	background:none;
 }
 #chatContext.context-active { 
-  background-color: #ff751a;
+  background-color: #66bdff;
   border-style: solid;
   border-width: 5px;
   border-color: #0078d4;

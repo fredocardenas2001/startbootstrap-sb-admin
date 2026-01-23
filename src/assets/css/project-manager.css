@@ -3,6 +3,13 @@
   border-collapse: collapse;
 }
 
+select {
+  margin: 0px 0px 0px 15px;
+  border-radius: 10px;
+}
+
+
+
 .project-table th,
 .project-table td {
   padding: 10px 12px;
@@ -133,7 +140,7 @@ tr.new-project-row a:hover {
 .project-modal .modal-box {
   position: relative;
   z-index: 1;
-  width: 70%;
+  width: 55%;
   margin: 60px auto;
   background: #fff;
   border-radius: 12px;
@@ -197,7 +204,7 @@ tr.new-project-row a:hover {
   gap: 10px;
 }
 
-/* Optional: style the Continue button if it’s a plain <button> */
+/* Optional: style the Continue button if it’s a plain <button> 
 .project-modal .modal-footer button {
   padding: 9px 14px;
   border-radius: 10px;
@@ -208,6 +215,7 @@ tr.new-project-row a:hover {
   cursor: pointer;
 }
 
+
 .project-modal .modal-footer button:hover {
   filter: brightness(0.98);
 }
@@ -215,6 +223,7 @@ tr.new-project-row a:hover {
 .project-modal .modal-footer button:active {
   transform: translateY(1px);
 }
+*/
 
 /* ================================
    Menu Tree (single, consistent system)
@@ -313,6 +322,7 @@ tr.new-project-row a:hover {
 .project-modal .tree-node:not(:has(> .tree-children)) > .tree-row .tree-toggle {
   visibility: hidden;
 }
+/*
 .project-modal button {
     background-color: #0078d4;
     color: white;
@@ -325,6 +335,7 @@ tr.new-project-row a:hover {
     font-size: 14px;
     border-radius: 18px;
 }
+*/
 .project-modal .modal-footer {
   padding: 16px 20px;
   border-top: 1px solid #e5e7eb;
@@ -336,7 +347,7 @@ tr.new-project-row a:hover {
   gap: 12px;
 }
 
-/* Optional button styling */
+/* Optional button styling 
 .project-modal .btn-primary {
   background: #2563eb;
   color: white;
@@ -353,6 +364,9 @@ tr.new-project-row a:hover {
   padding: 10px 18px;
   border-radius: 8px;
 }
+
+*/
+
 .project-modal .menu-tree .cb-slot {
   visibility: hidden;   /* keeps space in the grid */
   pointer-events: none; /* not clickable */
@@ -477,3 +491,57 @@ tr.new-project-row a:hover {
 .result-table .status-red {
   background-color: #fdecea; /* red */
 }
+.results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 10px 0px 10px 0px;
+}
+
+.results-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.results-header button {
+    padding: 9px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: #0078d4;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Unified Project Manager buttons — EXCLUDING directory */
+body.pm-page #layoutSidenav_content button:not(#directory-container button),
+body.pm-page #layoutSidenav_content button.btn:not(#directory-container button),
+body.pm-page #layoutSidenav_content button.btn-primary:not(#directory-container button),
+body.pm-page #layoutSidenav_content button.btn-secondary:not(#directory-container button),
+body.pm-page #projectModal button:not(#directory-container button) {
+  background-color: #0078d4;
+  color: #fff;
+  width:150px;
+  border: none;
+  border-radius: 18px;
+  padding: 8px 14px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.15s ease,
+              box-shadow 0.15s ease,
+              transform 0.12s ease;
+}
+
+/* Hover (same exclusion) */
+body.pm-page #layoutSidenav_content button:hover:not(#directory-container button:hover),
+body.pm-page #projectModal button:hover:not(#directory-container button:hover) {
+  background-color: #66bdff;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+
+
+

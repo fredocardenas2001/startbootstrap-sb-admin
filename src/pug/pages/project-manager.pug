@@ -1,7 +1,7 @@
 extends ../layouts/dashboard.pug
 
 block config
-    - var bodyClass = 'sb-nav-fixed'
+    - var bodyClass = 'sb-nav-fixed pm-page'
     - var pageTitle = 'Task Manager';
     - var index = true;
     - var sidenavStyle = 'sb-sidenav-dark'
@@ -96,11 +96,16 @@ block content
       p Processing project...
 
     .results-table.hidden
-      h3 Task Manager Results
+      .results-header
+        h3 Task Manager Results
+        .results-actions
+          button#addTaskListToProjects.btn-primary(type="button") Add Tasks
+          button#cancelResults.btn-secondary(type="button") Start Over
+
       table.result-table
         thead
-
         tbody#resultsTbody
+
 
 
   //- Modal (hidden by default)
@@ -134,7 +139,14 @@ block content
               .tree-row
                 span.tree-toggle.placeholder 🞂
                 input(type="checkbox")
-                span.tree-label Checklist
+                span.tree-label Checklist  
+                  select#checklistTemplateSelect.pm-inline-select
+                    option(value="default" selected) -- Select a Checklist --
+                    option(value="rancho") Rancho Santa Ana
+                    option(value="basic") West Estates
+                    option(value="closing") Pleasantville Farm
+                    option(value="development") West Parkerville Mall
+                    option(value="ops") Stonetown
 
             li
               .tree-row

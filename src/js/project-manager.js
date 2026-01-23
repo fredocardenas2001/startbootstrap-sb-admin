@@ -10,6 +10,67 @@ import DirectoryService from "./DirectoryService.js";
   const backdrop = modal ? modal.querySelector(".modal-backdrop") : null;
   if (box) box.addEventListener("click", (e) => e.stopPropagation());
 
+  function hideResultsPanel() {
+    const panel = document.getElementById("resultsPanel");
+    if (!panel) return;
+
+    panel.classList.add("hidden");
+
+    const loading = panel.querySelector(".results-loading");
+    const tableWrap = panel.querySelector(".results-table");
+    const tbody = panel.querySelector("#resultsTbody");
+
+    loading?.classList.add("hidden");
+    tableWrap?.classList.add("hidden");
+    if (tbody) tbody.innerHTML = "";
+  }
+
+  function addProjectRowToMainTable({
+    projectName = "Stonetown",
+    manager = "Jesse J",
+    task = "Data Verification",
+    percent = 0,
+    began = "NA",
+    assumed = "NA",
+    projected = "NA"
+  } = {}) {
+    const mainTable = document.querySelector("table.project-table");
+    if (!mainTable) return;
+
+    const tbody = mainTable.querySelector("tbody");
+    if (!tbody) return;
+
+    // Insert before the "+ New Task List" row
+    const newRowAnchor = tbody.querySelector("tr.new-project-row");
+
+    const pct = Math.max(0, Math.min(100, Number(percent) || 0));
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>
+        <a class="project-link" href="#" data-project="${projectName}">${projectName}</a>
+      </td>
+      <td>${manager}</td>
+      <td>${task}</td>
+      <td>
+        <div class="progress-cell">
+          <div class="progress-track">
+            <div class="progress-fill" style="width:${pct}%"></div>
+          </div>
+          <span class="progress-text">${pct}%</span>
+        </div>
+      </td>
+      <td>${began}</td>
+      <td>${assumed}</td>
+      <td>${projected}</td>
+    `.trim();
+
+    if (newRowAnchor) {
+      tbody.insertBefore(tr, newRowAnchor);
+    } else {
+      tbody.appendChild(tr);
+    }
+  }
 
   function openModal(e) {
     if (e) e.preventDefault();
@@ -49,6 +110,38 @@ import DirectoryService from "./DirectoryService.js";
     const dirContainer = modal.querySelector("#directory-container");
     if (dirContainer) dirContainer.innerHTML = "";
   }
+
+  const addBtn = document.getElementById("addTaskListToProjects");
+  const cancelResultsBtn = document.getElementById("cancelResults");
+
+  if (addBtn) {
+    addBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      // Minimal: create a new row in the main table.
+      // Later we can populate this from the selected directory/project.
+      addProjectRowToMainTable({
+        projectName: "Stonetown",
+        manager: "Jesse J",
+        task: "Data Verification",
+        percent: 0,
+        began: "NA",
+        assumed: "NA",
+        projected: "NA"
+      });
+
+      // Hide results after adding
+      hideResultsPanel();
+    });
+  }
+
+  if (cancelResultsBtn) {
+    cancelResultsBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      window.location.reload();
+    });
+  }
+
 
 
   if (openBtn && modal) openBtn.addEventListener("click", openModal);
@@ -113,7 +206,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -126,7 +219,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -139,7 +232,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -152,7 +245,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -165,7 +258,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -178,7 +271,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -191,7 +284,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green" class="status-green">2/1/2026</td>
@@ -204,7 +297,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green" class="status-green" class="status-green">2/1/2026</td>
@@ -217,7 +310,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green" class="status-green" class="status-green" class="status-green">2/1/2026</td>
@@ -230,7 +323,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -243,7 +336,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green" class="status-green">2/1/2026</td>
@@ -256,7 +349,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green" class="status-green" class="status-green">2/1/2026</td>
@@ -269,7 +362,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green" class="status-green" class="status-green" class="status-green">2/1/2026</td>
@@ -282,7 +375,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -295,7 +388,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -308,7 +401,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -321,7 +414,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -334,7 +427,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -347,7 +440,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -360,7 +453,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -373,7 +466,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -386,7 +479,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -399,7 +492,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -412,7 +505,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -425,7 +518,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -438,7 +531,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -451,7 +544,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -464,7 +557,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -477,7 +570,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -490,7 +583,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -503,7 +596,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -542,7 +635,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Data Request</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>1/21/2026</td>
       <td class="status-green">1/17/2026</td>
@@ -555,7 +648,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Data Request</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>1/21/2026</td>
       <td class="status-red">3/25/2026</td>
@@ -568,7 +661,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Data Request</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>1/21/2026</td>
       <td class="status-red">4/10/2026</td>
@@ -581,7 +674,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Data Request</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>1/21/2026</td>
       <td class="status-green">1/17/2026</td>
@@ -594,7 +687,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Data Request</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>1/21/2026</td>
       <td class="status-green">1/17/2026</td>
@@ -607,7 +700,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Data Request</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>1/21/2026</td>
       <td class="status-green">1/17/2026</td>
@@ -620,7 +713,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Data Request</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>1/21/2026</td>
       <td class="status-green">1/17/2026</td>
@@ -633,7 +726,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Data Request</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>1/21/2026</td>
       <td class="status-green">1/17/2026</td>
@@ -646,7 +739,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Data Request</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>1/21/2026</td>
       <td class="status-green">1/17/2026</td>
@@ -685,7 +778,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -698,7 +791,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -711,7 +804,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -724,7 +817,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -737,7 +830,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -750,7 +843,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Data Inputs</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -789,7 +882,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Data Request</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>1/21/2026</td>
       <td class="status-green">1/17/2026</td>
@@ -802,7 +895,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Data Request</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>1/21/2026</td>
       <td class="status-green">1/17/2026</td>
@@ -815,7 +908,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Data Request</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>1/21/2026</td>
       <td class="status-green">1/17/2026</td>
@@ -854,7 +947,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Data Request</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>1/21/2026</td>
       <td class="status-red">2/11/2026</td>
@@ -893,7 +986,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Standing</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -906,7 +999,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Standing</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -919,7 +1012,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Standing</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -932,7 +1025,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Verify Standing</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -971,7 +1064,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Comparison Analysis</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
@@ -984,7 +1077,7 @@ let wizardStep = 1;
       <td>Jame D</td>
       <td>David P</td>
       <td>Comparison Analysis</td>
-      <td></td>
+      <td><input type="checkbox"></input></td>
       <td>1/10/2026</td>
       <td>2/1/2026</td>
       <td class="status-green">2/1/2026</td>
